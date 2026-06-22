@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+  <head>
+    <title>SmartBite Dashboard</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body>
+    <div class="navbar">
+      <div class="nav-left">
+        <h2>🍔 SmartBite Dashboard</h2>
+      </div>
+
+      <div class="nav-right">
+        <div class="profile-menu">
+          <button class="profile-btn" onclick="toggleProfileMenu()">
+            👤 <span id="username"></span> ▼
+          </button>
+
+          <div id="profileDropdown" class="profile-dropdown">
+            <button onclick="window.location.href = 'dashboard.html'">
+              🏠 Dashboard
+            </button>
+
+            <button onclick="window.location.href = 'orders.html'">
+              📦 My Orders
+            </button>
+
+            <button onclick="window.location.href = 'favorites.html'">
+              ❤️ Wishlist
+            </button>
+
+            <button onclick="logout()">🚪 Logout</button>
+          </div>
+        </div>
+
+        <button onclick="window.location.href = 'restaurants.html'">
+          Restaurants
+        </button>
+
+        <button onclick="window.location.href = 'cart.html'">
+          🛒 Cart
+
+          <span id="cartCount" class="nav-badge">0</span>
+        </button>
+
+        <button onclick="window.location.href = 'favorites.html'">
+          ❤️ Wishlist
+
+          <span id="wishlistCount" class="nav-badge">0</span>
+        </button>
+
+        <button onclick="toggleDarkMode()">🌙</button>
+      </div>
+    </div>
+
+    <div class="hero-banner">
+      <h1>Welcome back 🍽</h1>
+
+      <p>
+        Discover trending dishes, personalized recommendations and your
+        favourite restaurants.
+      </p>
+    </div>
+
+    <div class="dashboard-shortcuts">
+      <div onclick="window.location.href = 'restaurants.html'">
+        🍽
+
+        <p>Browse Restaurants</p>
+      </div>
+
+      <div onclick="window.location.href = 'cart.html'">
+        🛒
+
+        <p>My Cart</p>
+      </div>
+
+      <div onclick="window.location.href = 'orders.html'">
+        📦
+
+        <p>Orders</p>
+      </div>
+
+      <div onclick="window.location.href = 'favorites.html'">
+        ❤️
+
+        <p>Wishlist</p>
+      </div>
+    </div>
+
+    <!-- Trending -->
+
+    <h2 class="section-title">🔥 Trending Foods</h2>
+
+    <div id="trendingFoods" class="dashboard-grid"></div>
+
+    <!-- Recommendation -->
+
+    <h2 class="section-title">⭐ Recommended For You</h2>
+
+    <div id="recommendations" class="food-grid"></div>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <h3>🍔 SmartBite</h3>
+
+        <p>Eat Smart • Live Better</p>
+      </div>
+    </footer>
+
+    <script src="js/dashboard.js"></script>
+    <script src="js/common.js"></script>
+  </body>
+</html>

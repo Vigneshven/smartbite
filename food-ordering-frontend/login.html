@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Food Ordering Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="login-card">
+        <img src="/food-ordering-frontend/images/logo.png" class="logo" />
+
+        <h2>🍔 SmartBite</h2>
+        <p class="tagline">Eat Smart, Live Better</p>
+
+        <input type="email" id="email" placeholder="Enter Email" />
+
+        <input type="password" id="password" placeholder="Enter Password" />
+
+        <button onclick="login()">Login</button>
+
+        <p id="message"></p>
+      </div>
+    </div>
+    <script src="js/login.js"></script>
+    <div id="toast" class="toast"></div>
+  </body>
+</html>

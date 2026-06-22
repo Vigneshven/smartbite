@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Food Details</title>
+
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body>
+    <!-- NAVBAR -->
+
+    <div class="navbar">
+      <div class="nav-left">
+        <h2>🍔 SmartBite</h2>
+      </div>
+
+      <div class="nav-right">
+        <button onclick="window.location.href = 'restaurants.html'">
+          🏠 Restaurants
+        </button>
+
+        <button onclick="window.location.href = 'foods.html'">🍽 Menu</button>
+
+        <button onclick="window.location.href = 'cart.html'">
+          🛒 Cart
+
+          <span id="cartCount" class="nav-badge">0</span>
+        </button>
+
+        <button onclick="window.location.href = 'favorites.html'">
+          ❤️ Wishlist
+
+          <span id="wishlistCount" class="nav-badge">0</span>
+        </button>
+
+        <button onclick="history.back()">← Back</button>
+
+        <button onclick="toggleDarkMode()">🌙</button>
+      </div>
+    </div>
+
+    <!-- HERO -->
+
+    <div class="hero-banner small-hero">
+      <h1>🍽 Food Details</h1>
+
+      <p>View ingredients, calories and order your favourite meal.</p>
+    </div>
+
+    <!-- FOOD DETAILS -->
+
+    <div id="foodDetails"></div>
+
+    <script src="js/food-details.js"></script>
+    <script src="js/common.js"></script>
+
+    <div id="toast" class="toast"></div>
+  </body>
+</html>

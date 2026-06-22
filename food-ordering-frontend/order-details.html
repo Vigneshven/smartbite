@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Order Details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body>
+    <!-- NAVBAR -->
+    <div class="navbar">
+      <div class="nav-left">
+        <h2>🍔 SmartBite</h2>
+      </div>
+
+      <div class="nav-center">
+        <input type="text" placeholder="🔍 Search orders..." />
+      </div>
+
+      <div class="nav-right">
+        <div class="profile-menu">
+          <button class="profile-btn" onclick="toggleProfileMenu()">
+            👤 <span id="username">User</span> ▼
+          </button>
+
+          <div id="profileDropdown" class="profile-dropdown">
+            <div class="profile-header">
+              <h3 id="profileName"></h3>
+
+              <p id="profileEmail"></p>
+
+              <p id="profilePhone"></p>
+            </div>
+
+            <button onclick="window.location.href = 'orders.html'">
+              📦 My Orders
+            </button>
+
+            <button onclick="window.location.href = 'favorites.html'">
+              ❤️ Wishlist
+            </button>
+
+            <button onclick="logout()">🚪 Logout</button>
+          </div>
+        </div>
+        <button onclick="toggleDarkMode()">🌙</button>
+        <button onclick="logout()">Logout</button>
+        <button onclick="window.location.href = 'orders.html'">Back</button>
+      </div>
+    </div>
+
+    <div id="orderDetails"></div>
+
+    <script src="js/order-details.js"></script>
+    <script src="js/common.js"></script>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <h3>🍔 SmartBite</h3>
+        <p>Eat Smart, Live Better</p>
+      </div>
+    </footer>
+    <div id="toast" class="toast"></div>
+  </body>
+</html>

@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+  <head>
+    <title>SmartBite - Foods</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body>
+    <div class="navbar">
+      <div class="nav-left">
+        <h2>🍔 SmartBite</h2>
+      </div>
+
+      <div class="nav-center">
+        <input
+          type="search"
+          id="foodSearch"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="🔍 Search food by name..."
+        />
+      </div>
+
+      <div class="nav-right">
+        <div class="profile-menu">
+          <button class="profile-btn" onclick="toggleProfileMenu()">
+            👤 <span id="username">User</span> ▼
+          </button>
+
+          <div id="profileDropdown" class="profile-dropdown">
+            <div class="profile-header">
+              <h3 id="profileName"></h3>
+
+              <p id="profileEmail"></p>
+
+              <p id="profilePhone"></p>
+            </div>
+
+            <button onclick="window.location.href = 'dashboard.html'">
+              🏠 Dashboard
+            </button>
+
+            <button onclick="window.location.href = 'orders.html'">
+              📦 My Orders
+            </button>
+
+            <button onclick="window.location.href = 'favorites.html'">
+              ❤️ Wishlist
+            </button>
+
+            <button onclick="logout()">🚪 Logout</button>
+          </div>
+        </div>
+
+        <button onclick="window.location.href = 'restaurants.html'">
+          🏠 Restaurants
+        </button>
+
+        <button onclick="openCart()">
+          🛒 Cart
+
+          <span id="cartCount" class="nav-badge"> 0 </span>
+        </button>
+
+        <button onclick="openWishlist()">
+          ❤️ Wishlist
+
+          <span id="wishlistCount" class="nav-badge"> 0 </span>
+        </button>
+
+        <button onclick="toggleDarkMode()">🌙</button>
+      </div>
+    </div>
+
+    <div class="food-tools">
+      <label for="sortFood" class="sort-label"> Sort by </label>
+
+      <select id="sortFood">
+        <option value="">Default</option>
+        <option value="low">Price: Low → High</option>
+        <option value="high">Price: High → Low</option>
+      </select>
+    </div>
+
+    <h2 class="section-title">🍽 Menu</h2>
+
+    <p id="foodCount" class="food-count">Showing 0 foods</p>
+
+    <div id="foods"></div>
+
+    <script src="js/foods.js"></script>
+    <script src="js/common.js"></script>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <h3>🍔 SmartBite Eat Smart • Live Better ©2026 SmartBite</h3>
+      </div>
+    </footer>
+    <div id="toast" class="toast"></div>
+  </body>
+</html>
