@@ -7,6 +7,15 @@ public class TrendingFood {
 
     private String imageUrl;
     private double price;
+    private int foodId;
+
+    public int getFoodId() {
+        return foodId;
+    }
+
+    public void setFoodId(int foodId) {
+        this.foodId = foodId;
+    }
 
     public String getFoodName() {
         return foodName;

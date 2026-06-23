@@ -9,32 +9,27 @@ import org.springframework.stereotype.Service;
 @Service
 public class DashboardService {
 
-    @Autowired
-    FavoriteDAO favoriteDAO;
+        @Autowired
+        FavoriteDAO favoriteDAO;
 
-    @Autowired
-    RecommendationService recommendationService;
+        @Autowired
+        RecommendationService recommendationService;
 
-    @Autowired
-    OrderService orderService;
+        @Autowired
+        OrderService orderService;
 
-    public Dashboard getDashboard(int userId) {
+        public Dashboard getDashboard(int userId) {
 
-    Dashboard dashboard = new Dashboard();
+                Dashboard dashboard = new Dashboard();
 
-    dashboard.setFavoriteFoods(
-            favoriteDAO.getFavorites(userId)
-    );
+                dashboard.setFavoriteFoods(
+                                favoriteDAO.getFavorites(userId));
+                dashboard.setRecommendations(
+                                favoriteDAO.getFavorites(userId));
 
-    // TEMP FIX: reuse same data to avoid compilation errors
-    dashboard.setRecommendations(
-            favoriteDAO.getFavorites(userId)
-    );
+                dashboard.setRecentOrders(
+                                favoriteDAO.getFavorites(userId));
 
-    dashboard.setRecentOrders(
-            favoriteDAO.getFavorites(userId)
-    );
-
-    return dashboard;
-}
+                return dashboard;
+        }
 }

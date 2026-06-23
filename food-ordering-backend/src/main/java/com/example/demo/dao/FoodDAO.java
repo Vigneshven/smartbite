@@ -51,6 +51,8 @@ public class FoodDAO {
 
                                         food.setImageUrl(
                                                         rs.getString("IMAGE_URL"));
+                                        food.setIngredients(
+                                                        rs.getString("INGREDIENTS"));
 
                                         return food;
                                 });
@@ -89,6 +91,9 @@ public class FoodDAO {
 
                                         food.setDescription(
                                                         rs.getString("DESCRIPTION"));
+
+                                        food.setIngredients(
+                                                        rs.getString("INGREDIENTS"));
 
                                         return food;
                                 });
@@ -151,16 +156,20 @@ public class FoodDAO {
                                         food.setCalories(
                                                         rs.getInt("CALORIES"));
 
+                                        food.setIngredients(
+                                                        rs.getString("INGREDIENTS"));
+
                                         return food;
                                 });
         }
 
         public List<Food> getMostLikedFoods() {
 
-                String sql = "SELECT f.FOOD_ID, f.FOOD_NAME, f.CATEGORY, f.PRICE, COUNT(fav.FOOD_ID) AS LIKE_COUNT " +
+                String sql = "SELECT f.FOOD_ID, f.FOOD_NAME, f.CATEGORY, f.PRICE, f.INGREDIENTS, COUNT(fav.FOOD_ID) AS LIKE_COUNT "
+                                +
                                 "FROM FOODS f " +
                                 "LEFT JOIN FAVORITES fav ON f.FOOD_ID = fav.FOOD_ID " +
-                                "GROUP BY f.FOOD_ID, f.FOOD_NAME, f.CATEGORY, f.PRICE " +
+                                "GROUP BY f.FOOD_ID, f.FOOD_NAME, f.CATEGORY, f.PRICE, f.INGREDIENTS " +
                                 "ORDER BY LIKE_COUNT DESC FETCH FIRST 5 ROWS ONLY";
 
                 return jdbcTemplate.query(sql, (rs, rowNum) -> {
@@ -171,6 +180,7 @@ public class FoodDAO {
                         food.setFoodName(rs.getString("FOOD_NAME"));
                         food.setCategory(rs.getString("CATEGORY"));
                         food.setPrice(rs.getDouble("PRICE"));
+                        food.setIngredients(rs.getString("INGREDIENTS"));
 
                         return food;
                 });
@@ -197,6 +207,7 @@ public class FoodDAO {
                                         food.setCalories(rs.getInt("CALORIES"));
                                         food.setPrice(rs.getDouble("PRICE"));
                                         food.setImageUrl(rs.getString("IMAGE_URL"));
+                                        food.setIngredients(rs.getString("INGREDIENTS"));
 
                                         return food;
                                 });
