@@ -31,16 +31,26 @@ public class SecurityConfig {
                 .cors(cors -> {
                 })
                 .authorizeHttpRequests(auth -> auth
+                        // Public endpoints
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/restaurants/**").permitAll()
+                        .requestMatchers("/api/foods/**").permitAll()
+                        .requestMatchers("/api/reviews/**").permitAll()
+                        .requestMatchers("/api/trending/**").permitAll()
+                        .requestMatchers("/api/budget/**").permitAll()
+                        .requestMatchers("/api/health/**").permitAll()
 
-                        .requestMatchers("/api/foods/**").authenticated()
-                        .requestMatchers("/api/restaurants/**").authenticated()
+                        // Protected endpoints (require authentication)
                         .requestMatchers("/api/orders/**").authenticated()
                         .requestMatchers("/api/recommendations/**").authenticated()
-                        .requestMatchers("/api/trending/**").authenticated()
-
+                        .requestMatchers("/api/reorder/**").authenticated()
+                        .requestMatchers("/api/wishlist/**").authenticated()
                         .requestMatchers("/api/favorites/**").authenticated()
                         .requestMatchers("/api/cart/**").authenticated()
+                        .requestMatchers("/api/dashboard/**").authenticated()
+
+                        // Admin-only
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
                         .anyRequest().authenticated());
 

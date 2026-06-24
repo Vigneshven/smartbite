@@ -6,73 +6,101 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Repository
 public class ReviewDAO {
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
+        @Autowired
+        JdbcTemplate jdbcTemplate;
 
-    public int addReview(Review review) {
+        private static final String UPLOAD_DIR = "src/main/resources/uploads/reviews/";
 
-        String sql =
-            "INSERT INTO REVIEWS " +
-            "(REVIEW_ID, USER_ID, RESTAURANT_ID, RATING, REVIEW_TEXT) " +
-            "VALUES (REVIEWS_SEQ.NEXTVAL, ?, ?, ?, ?)";
+        public int addReview(Review review) {
 
-        return jdbcTemplate.update(
-                sql,
-                review.getUserId(),
-                review.getRestaurantId(),
-                review.getRating(),
-                review.getComment()
-        );
-    }
+                String sql = "INSERT INTO REVIEWS " +
+                                "(REVIEW_ID, USER_ID, RESTAURANT_ID, RATING, REVIEW_TEXT, PHOTO_URL) " +
+                                "VALUES (REVIEWS_SEQ.NEXTVAL, ?, ?, ?, ?, ?)";
 
-    public List<Review> getReviewsByRestaurant(
-            int restaurantId) {
+                return jdbcTemplate.update(
+                                sql,
+                                review.getUserId(),
+                                review.getRestaurantId(),
+                                review.getRating(),
+                                review.getComment(),
+                                review.getPhotoUrl());
+        }
 
-        String sql =
-            "SELECT * FROM REVIEWS " +
-            "WHERE RESTAURANT_ID = ?";
+        public String savePhotoFile(byte[] fileData, String fileName) throws IOException {
+                File uploadDir = new File(UPLOAD_DIR);
+                if (!uploadDir.exists()) {
+                        uploadDir.mkdirs();
+                }
 
-        return jdbcTemplate.query(
-                sql,
-                ps -> ps.setInt(1, restaurantId),
-                (rs, rowNum) -> {
+                String fileNameWithTimestamp = System.currentTimeMillis() + "_" + fileName;
+                Path filePath = Paths.get(UPLOAD_DIR, fileNameWithTimestamp);
+                Files.write(filePath, fileData);
 
-                    Review review =
-                            new Review();
+                return "/uploads/reviews/" + fileNameWithTimestamp;
+        }
 
-                    review.setReviewId(
-                            rs.getInt("REVIEW_ID"));
+        public List<Review> getReviewsByRestaurant(
+                        int restaurantId) {
 
-                    review.setUserId(
-                            rs.getInt("USER_ID"));
+                String sql = "SELECT r.REVIEW_ID, r.USER_ID, r.RESTAURANT_ID, r.RATING, r.REVIEW_TEXT, r.PHOTO_URL, u.FULL_NAME AS USER_NAME "
+                                +
+                                "FROM REVIEWS r " +
+                                "LEFT JOIN USERS u ON r.USER_ID = u.USER_ID " +
+                                "WHERE r.RESTAURANT_ID = ? " +
+                                "ORDER BY r.REVIEW_ID DESC";
 
-                    review.setRestaurantId(
-                            rs.getInt("RESTAURANT_ID"));
+                return jdbcTemplate.query(
+                                sql,
+                                ps -> ps.setInt(1, restaurantId),
+                                (rs, rowNum) -> {
 
-                    review.setRating(
-                            rs.getInt("RATING"));
+                                        Review review = new Review();
 
-                    review.setComment(
-                            rs.getString("REVIEW_TEXT"));
+                                        review.setReviewId(
+                                                        rs.getInt("REVIEW_ID"));
 
-                    return review;
-                });
-    }
+                                        review.setUserId(
+                                                        rs.getInt("USER_ID"));
 
-    public Double getAverageRating(int restaurantId) {
+                                        review.setRestaurantId(
+                                                        rs.getInt("RESTAURANT_ID"));
 
-    String sql =
-        "SELECT AVG(RATING) " +
-        "FROM REVIEWS " +
-        "WHERE RESTAURANT_ID = ?";
+                                        review.setRating(
+                                                        rs.getInt("RATING"));
 
-    return jdbcTemplate.queryForObject(
-            sql,
-            Double.class,
-            restaurantId);
-    }
+                                        review.setComment(
+                                                        rs.getString("REVIEW_TEXT"));
+
+                                        review.setUserName(
+                                                        rs.getString("USER_NAME"));
+
+                                        review.setPhotoUrl(
+                                                        rs.getString("PHOTO_URL"));
+
+                                        return review;
+                                });
+        }
+
+        public Double getAverageRating(int restaurantId) {
+
+                String sql = "SELECT AVG(RATING) " +
+                                "FROM REVIEWS " +
+                                "WHERE RESTAURANT_ID = ?";
+
+                Double avg = jdbcTemplate.queryForObject(
+                                sql,
+                                Double.class,
+                                restaurantId);
+
+                return avg == null ? 0.0 : avg;
+        }
 }

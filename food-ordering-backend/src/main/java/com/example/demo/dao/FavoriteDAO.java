@@ -31,10 +31,13 @@ public class FavoriteDAO {
         String sql = "SELECT " +
                 "f.FOOD_ID, " +
                 "f.FOOD_NAME, " +
+                "f.CATEGORY, " +
                 "f.PRICE, " +
-                "f.IMAGE_URL " +
+                "f.IMAGE_URL, " +
+                "r.RESTAURANT_NAME " +
                 "FROM FAVORITES fav " +
                 "JOIN FOODS f ON fav.FOOD_ID = f.FOOD_ID " +
+                "JOIN RESTAURANTS r ON f.RESTAURANT_ID = r.RESTAURANT_ID " +
                 "WHERE fav.USER_ID = ?";
 
         return jdbcTemplate.query(
@@ -46,9 +49,54 @@ public class FavoriteDAO {
 
                     food.setFoodId(rs.getInt("FOOD_ID"));
                     food.setFoodName(rs.getString("FOOD_NAME"));
+                    food.setCategory(rs.getString("CATEGORY"));
                     food.setPrice(rs.getDouble("PRICE"));
                     food.setImageUrl(rs.getString("IMAGE_URL"));
+                    food.setRestaurantName(rs.getString("RESTAURANT_NAME"));
 
+                    return food;
+                });
+    }
+
+    public List<Food> getWishlistRecommendations(int userId) {
+        String categorySql = "SELECT CATEGORY FROM (" +
+                " SELECT f.CATEGORY, COUNT(*) TOTAL " +
+                " FROM FAVORITES fav " +
+                " JOIN FOODS f ON fav.FOOD_ID = f.FOOD_ID " +
+                " WHERE fav.USER_ID = ? " +
+                " GROUP BY f.CATEGORY " +
+                " ORDER BY TOTAL DESC" +
+                ") WHERE ROWNUM = 1";
+
+        List<String> categories = jdbcTemplate.query(
+                categorySql,
+                new Object[] { userId },
+                (rs, rowNum) -> rs.getString("CATEGORY"));
+
+        if (categories.isEmpty() || categories.get(0) == null || categories.get(0).isBlank()) {
+            return List.of();
+        }
+
+        String category = categories.get(0);
+
+        String sql = "SELECT f.FOOD_ID, f.FOOD_NAME, f.CATEGORY, f.PRICE, f.IMAGE_URL, r.RESTAURANT_NAME " +
+                "FROM FOODS f " +
+                "JOIN RESTAURANTS r ON f.RESTAURANT_ID = r.RESTAURANT_ID " +
+                "WHERE LOWER(f.CATEGORY) = LOWER(?) " +
+                "AND f.FOOD_ID NOT IN (SELECT FOOD_ID FROM FAVORITES WHERE USER_ID = ?) " +
+                "AND ROWNUM <= 6";
+
+        return jdbcTemplate.query(
+                sql,
+                new Object[] { category, userId },
+                (rs, rowNum) -> {
+                    Food food = new Food();
+                    food.setFoodId(rs.getInt("FOOD_ID"));
+                    food.setFoodName(rs.getString("FOOD_NAME"));
+                    food.setCategory(rs.getString("CATEGORY"));
+                    food.setPrice(rs.getDouble("PRICE"));
+                    food.setImageUrl(rs.getString("IMAGE_URL"));
+                    food.setRestaurantName(rs.getString("RESTAURANT_NAME"));
                     return food;
                 });
     }
@@ -81,31 +129,20 @@ public class FavoriteDAO {
 
     public List<Food> getMostLikedFoods() {
 
-        String sql = "SELECT " +
-                "f.FOOD_ID, " +
-                "f.FOOD_NAME, " +
-                "f.PRICE, " +
-                "f.IMAGE_URL, " +
-                "COUNT(fav.FOOD_ID) AS LIKE_COUNT " +
+        String sql = "SELECT * FROM (" +
+                "SELECT f.FOOD_ID, f.FOOD_NAME, f.PRICE, f.IMAGE_URL, COUNT(fav.FOOD_ID) AS LIKE_COUNT " +
                 "FROM FOODS f " +
                 "LEFT JOIN FAVORITES fav ON f.FOOD_ID = fav.FOOD_ID " +
-                "GROUP BY " +
-                "f.FOOD_ID, " +
-                "f.FOOD_NAME, " +
-                "f.PRICE, " +
-                "f.IMAGE_URL " +
-                "ORDER BY LIKE_COUNT DESC FETCH FIRST 5 ROWS ONLY";
+                "GROUP BY f.FOOD_ID, f.FOOD_NAME, f.PRICE, f.IMAGE_URL " +
+                "ORDER BY LIKE_COUNT DESC) WHERE ROWNUM <= 5";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
-
             Food food = new Food();
-
             food.setFoodId(rs.getInt("FOOD_ID"));
             food.setFoodName(rs.getString("FOOD_NAME"));
             food.setLikeCount(rs.getInt("LIKE_COUNT"));
             food.setPrice(rs.getDouble("PRICE"));
             food.setImageUrl(rs.getString("IMAGE_URL"));
-
             return food;
         });
     }

@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+  <head>
+    <title>SmartBite Admin Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="login-card">
+        <img src="images/logo.png" class="logo" />
+
+        <h2>Admin Login</h2>
+        <p class="tagline">Access the SmartBite admin dashboard</p>
+
+        <input type="email" id="adminEmail" placeholder="Admin Email" />
+        <input type="password" id="adminPassword" placeholder="Password" />
+
+        <button onclick="adminLogin()">Login</button>
+        <p id="adminMessage"></p>
+      </div>
+    </div>
+
+    <script src="js/admin-login.js"></script>
+  </body>
+</html>

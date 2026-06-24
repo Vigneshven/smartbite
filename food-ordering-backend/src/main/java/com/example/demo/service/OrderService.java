@@ -1,11 +1,15 @@
 package com.example.demo.service;
 
 import com.example.demo.dao.OrderDAO;
+import com.example.demo.model.Food;
+import com.example.demo.model.OrderDetail;
+import com.example.demo.model.OrderHistory;
+import com.example.demo.model.OrderStatusResponse;
+import com.example.demo.model.TopRestaurantResponse;
+import com.example.demo.model.WeeklySpending;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import com.example.demo.model.OrderHistory;
-import com.example.demo.model.OrderDetail;
 
 @Service
 public class OrderService {
@@ -60,6 +64,28 @@ public class OrderService {
 
         return orderDAO.getOrderDetails(
                 orderId);
+    }
+
+    public OrderStatusResponse getOrderStatus(
+            int orderId) {
+
+        return orderDAO.getOrderStatus(orderId);
+    }
+
+    public WeeklySpending getWeeklySpending(
+            int userId) {
+
+        return orderDAO.getWeeklySpending(userId);
+    }
+
+    public TopRestaurantResponse getTopRestaurant(
+            int userId) {
+
+        return orderDAO.getTopRestaurant(userId);
+    }
+
+    public List<Food> getReorderFoods(int userId) {
+        return orderDAO.getReorderFoods(userId);
     }
 
 }

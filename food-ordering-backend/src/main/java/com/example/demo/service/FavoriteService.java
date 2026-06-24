@@ -21,37 +21,39 @@ public class FavoriteService {
     }
 
     public List<Food> getFavorites(int userId) {
-    return favoriteDAO.getFavorites(userId);
+        return favoriteDAO.getFavorites(userId);
+    }
+
+    public List<Food> getWishlistRecommendations(int userId) {
+        return favoriteDAO.getWishlistRecommendations(userId);
     }
 
     public int removeFavorite(int id) {
-    return favoriteDAO.removeFavorite(id);
+        return favoriteDAO.removeFavorite(id);
     }
 
     public boolean exists(int userId, int foodId) {
-    return favoriteDAO.exists(userId, foodId);
+        return favoriteDAO.exists(userId, foodId);
     }
 
     public String toggleFavorite(Favorite favorite) {
 
-    boolean exists = favoriteDAO.exists(
-            favorite.getUserId(),
-            favorite.getFoodId()
-    );
-
-    if (exists) {
-        favoriteDAO.removeByUserAndFood(
+        boolean exists = favoriteDAO.exists(
                 favorite.getUserId(),
-                favorite.getFoodId()
-        );
-        return "Removed";
-    } else {
-        favoriteDAO.addFavorite(favorite);
-        return "Added";
-    }
+                favorite.getFoodId());
+
+        if (exists) {
+            favoriteDAO.removeByUserAndFood(
+                    favorite.getUserId(),
+                    favorite.getFoodId());
+            return "Removed";
+        } else {
+            favoriteDAO.addFavorite(favorite);
+            return "Added";
+        }
     }
 
     public int removeByUserAndFood(int userId, int foodId) {
-    return favoriteDAO.removeByUserAndFood(userId, foodId);
+        return favoriteDAO.removeByUserAndFood(userId, foodId);
     }
 }

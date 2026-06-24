@@ -165,12 +165,15 @@ public class FoodDAO {
 
         public List<Food> getMostLikedFoods() {
 
-                String sql = "SELECT f.FOOD_ID, f.FOOD_NAME, f.CATEGORY, f.PRICE, f.INGREDIENTS, COUNT(fav.FOOD_ID) AS LIKE_COUNT "
+                String sql = "SELECT * FROM (" +
+                                "SELECT f.FOOD_ID, f.FOOD_NAME, f.CATEGORY, f.PRICE, f.INGREDIENTS, r.RESTAURANT_NAME, COUNT(fav.FOOD_ID) AS LIKE_COUNT "
                                 +
                                 "FROM FOODS f " +
+                                "LEFT JOIN RESTAURANTS r ON f.RESTAURANT_ID = r.RESTAURANT_ID " +
                                 "LEFT JOIN FAVORITES fav ON f.FOOD_ID = fav.FOOD_ID " +
-                                "GROUP BY f.FOOD_ID, f.FOOD_NAME, f.CATEGORY, f.PRICE, f.INGREDIENTS " +
-                                "ORDER BY LIKE_COUNT DESC FETCH FIRST 5 ROWS ONLY";
+                                "GROUP BY f.FOOD_ID, f.FOOD_NAME, f.CATEGORY, f.PRICE, f.INGREDIENTS, r.RESTAURANT_NAME "
+                                +
+                                "ORDER BY LIKE_COUNT DESC) WHERE ROWNUM <= 5";
 
                 return jdbcTemplate.query(sql, (rs, rowNum) -> {
 
@@ -181,6 +184,7 @@ public class FoodDAO {
                         food.setCategory(rs.getString("CATEGORY"));
                         food.setPrice(rs.getDouble("PRICE"));
                         food.setIngredients(rs.getString("INGREDIENTS"));
+                        food.setRestaurantName(rs.getString("RESTAURANT_NAME"));
 
                         return food;
                 });
@@ -206,6 +210,37 @@ public class FoodDAO {
                                         food.setCategory(rs.getString("CATEGORY"));
                                         food.setCalories(rs.getInt("CALORIES"));
                                         food.setPrice(rs.getDouble("PRICE"));
+                                        food.setImageUrl(rs.getString("IMAGE_URL"));
+                                        food.setIngredients(rs.getString("INGREDIENTS"));
+
+                                        return food;
+                                });
+        }
+
+        public List<Food> getFoodsByCategory(String category) {
+
+                String sql = "SELECT f.FOOD_ID, f.RESTAURANT_ID, r.RESTAURANT_NAME, f.FOOD_NAME, f.CATEGORY, f.PRICE, f.DESCRIPTION, f.CALORIES, f.STOCK, f.IMAGE_URL, f.INGREDIENTS "
+                                +
+                                "FROM FOODS f " +
+                                "LEFT JOIN RESTAURANTS r ON f.RESTAURANT_ID = r.RESTAURANT_ID " +
+                                "WHERE LOWER(f.CATEGORY) = LOWER(?) AND ROWNUM <= 12";
+
+                return jdbcTemplate.query(
+                                sql,
+                                new Object[] { category },
+                                (rs, rowNum) -> {
+
+                                        Food food = new Food();
+
+                                        food.setFoodId(rs.getInt("FOOD_ID"));
+                                        food.setRestaurantId(rs.getInt("RESTAURANT_ID"));
+                                        food.setRestaurantName(rs.getString("RESTAURANT_NAME"));
+                                        food.setFoodName(rs.getString("FOOD_NAME"));
+                                        food.setCategory(rs.getString("CATEGORY"));
+                                        food.setPrice(rs.getDouble("PRICE"));
+                                        food.setDescription(rs.getString("DESCRIPTION"));
+                                        food.setCalories(rs.getInt("CALORIES"));
+                                        food.setStock(rs.getInt("STOCK"));
                                         food.setImageUrl(rs.getString("IMAGE_URL"));
                                         food.setIngredients(rs.getString("INGREDIENTS"));
 

@@ -20,12 +20,14 @@ public class TrendingFoodDAO {
                                 "f.FOOD_NAME, " +
                                 "f.IMAGE_URL, " +
                                 "f.PRICE, " +
+                                "r.RESTAURANT_NAME, " +
                                 "COUNT(*) TOTAL_ORDERS " +
                                 "FROM ORDER_ITEMS oi " +
                                 "JOIN FOODS f " +
                                 "ON oi.FOOD_ID = f.FOOD_ID " +
+                                "LEFT JOIN RESTAURANTS r ON f.RESTAURANT_ID = r.RESTAURANT_ID " +
                                 "GROUP BY " +
-                                "f.FOOD_ID, f.FOOD_NAME, f.IMAGE_URL, f.PRICE " +
+                                "f.FOOD_ID, f.FOOD_NAME, f.IMAGE_URL, f.PRICE, r.RESTAURANT_NAME " +
                                 "ORDER BY TOTAL_ORDERS DESC";
 
                 return jdbcTemplate.query(
@@ -45,6 +47,9 @@ public class TrendingFoodDAO {
 
                                         food.setPrice(
                                                         rs.getDouble("PRICE"));
+
+                                        food.setRestaurantName(
+                                                        rs.getString("RESTAURANT_NAME"));
 
                                         food.setTotalOrders(
                                                         rs.getInt("TOTAL_ORDERS"));

@@ -1,4 +1,8 @@
+const API_BASE_URL = "http://localhost:8080/api";
+
 let quantity = 1;
+let favorites = [];
+let foodPrice = 0;
 
 function changeQty(value) {
   quantity += value;
@@ -8,58 +12,92 @@ function changeQty(value) {
   }
 
   document.getElementById("foodQty").innerText = quantity;
+
+  document.getElementById("foodPrice").innerText = foodPrice * quantity;
 }
 
 async function loadNavbarData() {
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
 
-  // Cart Count
-  const cartResponse = await fetch(
-    `http://localhost:8080/api/cart/user/${userId}`,
-    {
-      headers: {
-        Authorization: "Bearer " + token,
+  const cartCountElement = document.getElementById("cartCount");
+  const wishlistCountElement = document.getElementById("wishlistCount");
+
+  if (!token || !userId) {
+    if (cartCountElement) cartCountElement.innerText = "0";
+    if (wishlistCountElement) wishlistCountElement.innerText = "0";
+    return;
+  }
+
+  try {
+    const [cartResponse, favoriteResponse] = await Promise.all([
+      fetch(`http://localhost:8080/api/cart/user/${userId}`, {
+        headers: { Authorization: "Bearer " + token },
+      }),
+      fetch(`http://localhost:8080/api/favorites/${userId}`, {
+        headers: { Authorization: "Bearer " + token },
+      }),
+    ]);
+
+    if (cartResponse.ok && cartCountElement) {
+      const cart = await cartResponse.json();
+      const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+      cartCountElement.innerText = cartCount;
+    } else if (cartCountElement) {
+      cartCountElement.innerText = "0";
+    }
+
+    if (favoriteResponse.ok && wishlistCountElement) {
+      const favorites = await favoriteResponse.json();
+      wishlistCountElement.innerText = favorites.length;
+    } else if (wishlistCountElement) {
+      wishlistCountElement.innerText = "0";
+    }
+  } catch (error) {
+    if (cartCountElement) cartCountElement.innerText = "0";
+    if (wishlistCountElement) wishlistCountElement.innerText = "0";
+  }
+}
+
+async function loadFavorites() {
+  const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId");
+
+  if (!token || !userId) {
+    favorites = [];
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      `http://localhost:8080/api/favorites/${userId}`,
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
       },
-    },
-  );
-
-  const cart = await cartResponse.json();
-
-  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-  document.getElementById("cartCount").innerText = cartCount;
-
-  // Wishlist Count
-  const favoriteResponse = await fetch(
-    `http://localhost:8080/api/favorites/${userId}`,
-    {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    },
-  );
-
-  const favorites = await favoriteResponse.json();
-
-  document.getElementById("wishlistCount").innerText = favorites.length;
+    );
+    favorites = response.ok ? await response.json() : [];
+  } catch (error) {
+    favorites = [];
+  }
 }
 
 async function loadFood() {
+  quantity = 1;
   const foodId = localStorage.getItem("foodId");
   const token = localStorage.getItem("token");
 
-  const response = await fetch(
-    "http://localhost:8080/api/foods/" + foodId,
-
-    {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    },
-  );
+  const response = await fetch(`http://localhost:8080/api/foods/${foodId}`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
 
   const food = await response.json();
+  foodPrice = food.price;
+
+  await loadFavorites();
+
+  const isFav = favorites.some((f) => f.foodId == food.foodId);
 
   document.getElementById("foodDetails").innerHTML = `
 
@@ -91,6 +129,28 @@ async function loadFood() {
 
 </div>
 
+<div class="health-score-card">
+    <h3>Health Score</h3>
+    <p class="health-score-description">
+      We analyze calories, protein, and fat to help you choose a healthier meal.
+    </p>
+    <div class="health-score-body">
+      <div class="health-score-value" id="healthScoreValue">—</div>
+      <div id="healthNutrition" class="nutrition-grid">
+        <div class="nutrition-chip">Calories: —</div>
+        <div class="nutrition-chip">Protein: —</div>
+        <div class="nutrition-chip">Fat: —</div>
+      </div>
+    </div>
+    <button
+      class="btn btn-secondary"
+      onclick="loadHealthScore(${food.foodId})"
+      type="button"
+    >
+      Refresh Health Score
+    </button>
+</div>
+
 <div class="ingredients-card">
 
     <h3>🥗 Ingredients</h3>
@@ -113,13 +173,15 @@ async function loadFood() {
 
 </div>
 
-        <h2 class="food-price">₹ ${food.price}</h2>
+        <h2 class="food-price">
+    ₹ <span id="foodPrice">${food.price}</span>
+</h2>
 
         <button
-class="wishlist-btn"
+class="wishlist-btn ${isFav ? "active" : ""}"
 onclick="toggleFavorite(${food.foodId})">
 
-❤️ Add To Wishlist
+${isFav ? "❤️ Added to Wishlist" : "🤍 Add To Wishlist"}
 
 </button>
 
@@ -149,6 +211,43 @@ onclick="toggleFavorite(${food.foodId})">
 </div>
 
 `;
+
+  await loadHealthScore(food.foodId);
+}
+
+async function loadHealthScore(foodId) {
+  const scoreElement = document.getElementById("healthScoreValue");
+  const nutritionElement = document.getElementById("healthNutrition");
+
+  if (scoreElement) scoreElement.innerText = "Loading...";
+  if (nutritionElement)
+    nutritionElement.innerHTML =
+      '<div class="nutrition-chip">Calories: —</div><div class="nutrition-chip">Protein: —</div><div class="nutrition-chip">Fat: —</div>';
+
+  try {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_BASE_URL}/health/${foodId}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+
+    if (!response.ok) throw new Error("Failed to load health score");
+
+    const result = await response.json();
+
+    if (scoreElement) scoreElement.innerText = result.healthScore;
+    if (nutritionElement)
+      nutritionElement.innerHTML = `
+        <div class="nutrition-chip">Calories: ${result.calories}</div>
+        <div class="nutrition-chip">Protein: ${result.protein}g</div>
+        <div class="nutrition-chip">Fat: ${result.fat}g</div>
+      `;
+  } catch (error) {
+    console.error(error);
+    if (scoreElement) scoreElement.innerText = "—";
+    if (nutritionElement)
+      nutritionElement.innerHTML =
+        '<div class="nutrition-chip">Unable to load nutrition data</div>';
+  }
 }
 
 Promise.all([loadNavbarData(), loadFood()]);
@@ -156,6 +255,11 @@ Promise.all([loadNavbarData(), loadFood()]);
 async function addToCart(foodId) {
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
+
+  if (!token || !userId) {
+    requireLogin();
+    return;
+  }
 
   const response = await fetch("http://localhost:8080/api/cart/add", {
     method: "POST",
@@ -209,4 +313,6 @@ async function toggleFavorite(foodId) {
   showToast("❤️ Wishlist Updated");
 
   await loadNavbarData();
+
+  await loadFood();
 }

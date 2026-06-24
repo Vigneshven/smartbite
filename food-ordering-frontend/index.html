@@ -1,0 +1,353 @@
+<!doctype html>
+<html>
+  <head>
+    <title>SmartBite | Food Delivered Fresh</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="navbar">
+      <div class="nav-left">
+        <h2>🍔 SmartBite</h2>
+      </div>
+
+      <div class="nav-center">
+        <a href="index.html">Home</a>
+        <a href="restaurants.html">Restaurants</a>
+        <a href="foods.html">Menu</a>
+        <a href="#offers">Offers</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#footer">Contact</a>
+      </div>
+
+      <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+
+      <div class="nav-right" id="navMenu">
+        <button class="profile-btn" onclick="location.href = 'login.html'">
+          Login
+        </button>
+        <button class="profile-btn" onclick="location.href = 'register.html'">
+          Sign Up
+        </button>
+      </div>
+    </div>
+
+    <main>
+      <section class="homepage-hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Good food, great moments</p>
+          <h1>
+            Order from the best restaurants near you and enjoy delicious food at
+            your doorstep.
+          </h1>
+          <p>
+            Discover top restaurants, exclusive first-order offers, and fast
+            delivery across your city.
+          </p>
+
+          <div class="hero-actions">
+            <button
+              class="btn btn-secondary"
+              onclick="
+                document
+                  .getElementById('budgetPlanner')
+                  .scrollIntoView({ behavior: 'smooth' })
+              "
+            >
+              Plan My Budget Meal
+            </button>
+            <button
+              class="btn btn-secondary"
+              onclick="location.href = 'restaurants.html'"
+            >
+              View Restaurants
+            </button>
+          </div>
+
+          <div class="hero-highlights">
+            <div>
+              <strong>Fast Delivery</strong>
+              <p>On-time, every time</p>
+            </div>
+            <div>
+              <strong>Best Quality</strong>
+              <p>100% quality food</p>
+            </div>
+            <div>
+              <strong>Easy Payments</strong>
+              <p>Multiple payment options</p>
+            </div>
+            <div>
+              <strong>Great Offers</strong>
+              <p>Exciting deals & discounts</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-image">
+          <img src="images/burger.jpg" alt="Delicious burger and fries" />
+        </div>
+      </section>
+
+      <section class="section-title centered">
+        <h2>Budget Meal Planner</h2>
+      </section>
+
+      <section id="budgetPlanner" class="budget-planner-section">
+        <div class="budget-planner-card">
+          <div>
+            <p class="eyebrow">Smart Meals</p>
+            <h2>Find the best meal combo within your budget</h2>
+            <p>
+              Enter a budget and get a curated selection of foods that fit your
+              spending goal.
+            </p>
+          </div>
+
+          <form id="budgetForm" class="budget-form">
+            <div class="budget-input-group">
+              <label for="budgetAmount">Your budget (₹)</label>
+              <input
+                type="number"
+                id="budgetAmount"
+                placeholder="e.g. 500"
+                min="1"
+              />
+            </div>
+            <div class="budget-form-actions">
+              <button type="submit" class="btn btn-primary">
+                See Meal Ideas
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="clearBudgetResults()"
+              >
+                Clear Meal Ideas
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div id="budgetResults" class="budget-results">
+          <p>
+            Enter your budget above to discover meal recommendations and see how
+            much you can save.
+          </p>
+        </div>
+      </section>
+
+      <section class="section-title centered">
+        <h2>Explore By Categories</h2>
+      </section>
+
+      <div class="category-grid">
+        <div class="category-card" onclick="searchCategory('Burgers')">
+          <img src="images/burger.jpg" alt="Burgers" />
+          <span>Burgers</span>
+        </div>
+        <div class="category-card" onclick="searchCategory('Pizzas')">
+          <img src="images/pizza1.jpg" alt="Pizzas" />
+          <span>Pizzas</span>
+        </div>
+        <div class="category-card" onclick="searchCategory('Indian')">
+          <img src="images/idli.jpg" alt="Indian" />
+          <span>Indian</span>
+        </div>
+        <div class="category-card" onclick="searchCategory('Chinese')">
+          <img src="images/noodles.jpg" alt="Chinese" />
+          <span>Chinese</span>
+        </div>
+        <div class="category-card" onclick="searchCategory('Desserts')">
+          <img src="images/icecream.jpg" alt="Desserts" />
+          <span>Desserts</span>
+        </div>
+        <div class="category-card" onclick="searchCategory('Beverages')">
+          <img src="images/coffee.jpg" alt="Beverages" />
+          <span>Beverages</span>
+        </div>
+      </div>
+
+      <div class="category-actions">
+        <button
+          class="btn btn-secondary"
+          onclick="window.location.href = 'restaurants.html'"
+        >
+          View All Categories
+        </button>
+      </div>
+
+      <section id="offers" class="promo-banner">
+        <div class="promo-copy">
+          <p class="eyebrow">Limited Time Offer</p>
+          <h2>Get 50% OFF on your first order!</h2>
+          <p>
+            Use code <strong>WELCOME50</strong> at checkout and unlock tasty
+            savings from top restaurants.
+          </p>
+          <button
+            class="btn btn-primary"
+            onclick="location.href = 'register.html'"
+          >
+            Order Now
+          </button>
+        </div>
+        <div class="promo-image">
+          <img src="images/pizza1.jpg" alt="Pizza offer" />
+        </div>
+      </section>
+
+      <section class="section-title centered">
+        <h2>Popular Restaurants</h2>
+      </section>
+
+      <div class="restaurant-grid">
+        <article class="restaurant-card-alt" onclick="viewRestaurant(1)">
+          <img src="images/restaurant1.jpg" alt="McDonald's" />
+          <div class="restaurant-info">
+            <h3 class="restaurant-name">McDonald's</h3>
+            <p>Burger, Fast Food</p>
+            <div class="restaurant-meta">
+              <span>4.5 ⭐</span>
+              <span>30-40 min</span>
+              <span>₹₹</span>
+            </div>
+          </div>
+        </article>
+        <article class="restaurant-card-alt" onclick="viewRestaurant(2)">
+          <img src="images/restaurant2.jpg" alt="Domino's Pizza" />
+          <div class="restaurant-info">
+            <h3 class="restaurant-name">Domino's Pizza</h3>
+            <p>Pizza, Italian</p>
+            <div class="restaurant-meta">
+              <span>4.3 ⭐</span>
+              <span>25-35 min</span>
+              <span>₹₹</span>
+            </div>
+          </div>
+        </article>
+        <article class="restaurant-card-alt" onclick="viewRestaurant(3)">
+          <img src="images/restaurant3.jpg" alt="KFC" />
+          <div class="restaurant-info">
+            <h3 class="restaurant-name">KFC</h3>
+            <p>Chicken, Fast Food</p>
+            <div class="restaurant-meta">
+              <span>4.2 ⭐</span>
+              <span>30-40 min</span>
+              <span>₹₹</span>
+            </div>
+          </div>
+        </article>
+        <article class="restaurant-card-alt" onclick="viewRestaurant(4)">
+          <img src="images/restaurant4.jpg" alt="Behrouz Biryani" />
+          <div class="restaurant-info">
+            <h3 class="restaurant-name">Behrouz Biryani</h3>
+            <p>Biryani, Mughlai</p>
+            <div class="restaurant-meta">
+              <span>4.6 ⭐</span>
+              <span>35-45 min</span>
+              <span>₹₹</span>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <section id="how-it-works" class="section-title centered">
+        <h2>How It Works</h2>
+      </section>
+
+      <div class="how-it-works">
+        <article class="step-card">
+          <div class="step-icon">1</div>
+          <h3>Choose Location</h3>
+          <p>Enter your delivery location and browse nearby restaurants.</p>
+        </article>
+        <article class="step-card">
+          <div class="step-icon">2</div>
+          <h3>Choose Food</h3>
+          <p>Select your favorite dishes from top-rated restaurants.</p>
+        </article>
+        <article class="step-card">
+          <div class="step-icon">3</div>
+          <h3>Fast Delivery</h3>
+          <p>We deliver your meal fresh and hot right to your doorstep.</p>
+        </article>
+        <article class="step-card">
+          <div class="step-icon">4</div>
+          <h3>Enjoy Your Meal</h3>
+          <p>Sit back, relax, and enjoy delicious food at home.</p>
+        </article>
+      </div>
+
+      <section class="cta-banner">
+        <div>
+          <h2>Hunger Calling? Order your favorite food now!</h2>
+          <p>
+            Sign up today and get your first order delivered with a special
+            discount.
+          </p>
+        </div>
+        <div class="cta-buttons">
+          <button
+            class="btn btn-primary"
+            onclick="location.href = 'login.html'"
+          >
+            Login
+          </button>
+          <button
+            class="btn btn-secondary"
+            onclick="location.href = 'register.html'"
+          >
+            Sign Up
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer" id="footer">
+      <div class="footer-content">
+        <h3>SmartBite</h3>
+        <p>Good Food, Great Moments!</p>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="restaurants.html">Restaurants</a>
+          <a href="foods.html">Menu</a>
+          <a href="login.html">Login</a>
+          <a href="register.html">Sign Up</a>
+        </div>
+        <p class="copyright">© 2026 SmartBite. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script src="js/index.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/navbar.js"></script>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+      <a href="index.html" class="nav-item active" title="Home">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">Home</span>
+      </a>
+      <a href="dashboard.html" class="nav-item" title="Dashboard">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">Dashboard</span>
+      </a>
+      <a href="restaurants.html" class="nav-item" title="Restaurants">
+        <span class="nav-icon">🍽️</span>
+        <span class="nav-label">Restaurants</span>
+      </a>
+      <a href="cart.html" class="nav-item" title="Cart">
+        <span class="nav-icon">🛒</span>
+        <span class="nav-label">Cart</span>
+        <span class="nav-badge" id="cartBadge" style="display: none">0</span>
+      </a>
+      <a href="#" class="nav-item" id="profileNavBtn" title="Profile">
+        <span class="nav-icon">👤</span>
+        <span class="nav-label">Profile</span>
+      </a>
+    </nav>
+
+    <div id="toast" class="toast"></div>
+  </body>
+</html>

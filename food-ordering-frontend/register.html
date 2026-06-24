@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <head>
+    <title>SmartBite Register</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="login-card">
+        <img src="images/logo.png" class="logo" />
+
+        <h2>Create Account</h2>
+        <p class="tagline">Sign up to start ordering</p>
+
+        <input type="text" id="fullName" placeholder="Full Name" />
+        <input type="email" id="email" placeholder="Email" />
+        <input type="text" id="phone" placeholder="Phone Number (optional)" />
+        <input type="password" id="password" placeholder="Password" />
+
+        <button onclick="registerUser()">Sign Up</button>
+        <p id="registerMessage"></p>
+      </div>
+    </div>
+
+    <script src="js/register.js"></script>
+  </body>
+</html>

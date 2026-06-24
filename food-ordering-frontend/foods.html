@@ -13,63 +13,53 @@
       </div>
 
       <div class="nav-center">
-        <input
-          type="search"
-          id="foodSearch"
-          autocomplete="off"
-          spellcheck="false"
-          placeholder="🔍 Search food by name..."
-        />
+        <input type="search" id="globalSearch" placeholder="🔍 Search..." />
       </div>
 
-      <div class="nav-right">
+      <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+
+      <div class="nav-right" id="navMenu">
         <div class="profile-menu">
           <button class="profile-btn" onclick="toggleProfileMenu()">
             👤 <span id="username">User</span> ▼
           </button>
 
-          <div id="profileDropdown" class="profile-dropdown">
+          <div class="profile-dropdown" id="profileDropdown">
             <div class="profile-header">
               <h3 id="profileName"></h3>
-
               <p id="profileEmail"></p>
-
               <p id="profilePhone"></p>
             </div>
 
-            <button onclick="window.location.href = 'dashboard.html'">
+            <button onclick="location.href = 'dashboard.html'">
               🏠 Dashboard
             </button>
 
-            <button onclick="window.location.href = 'orders.html'">
+            <button onclick="location.href = 'restaurants.html'">
+              🍽 Restaurants
+            </button>
+
+            <button onclick="location.href = 'foods.html'">🍔 Menu</button>
+
+            <button onclick="location.href = 'cart.html'">
+              🛒 Cart
+              <span id="cartCount">0</span>
+            </button>
+
+            <button onclick="location.href = 'favorites.html'">
+              ❤️ Wishlist
+              <span id="wishlistCount">0</span>
+            </button>
+
+            <button onclick="location.href = 'orders.html'">
               📦 My Orders
             </button>
 
-            <button onclick="window.location.href = 'favorites.html'">
-              ❤️ Wishlist
-            </button>
+            <button onclick="toggleDarkMode()">🌙 Dark Mode</button>
 
             <button onclick="logout()">🚪 Logout</button>
           </div>
         </div>
-
-        <button onclick="window.location.href = 'restaurants.html'">
-          🏠 Restaurants
-        </button>
-
-        <button onclick="openCart()">
-          🛒 Cart
-
-          <span id="cartCount" class="nav-badge"> 0 </span>
-        </button>
-
-        <button onclick="openWishlist()">
-          ❤️ Wishlist
-
-          <span id="wishlistCount" class="nav-badge"> 0 </span>
-        </button>
-
-        <button onclick="toggleDarkMode()">🌙</button>
       </div>
     </div>
 
@@ -83,20 +73,114 @@
       </select>
     </div>
 
-    <h2 class="section-title">🍽 Menu</h2>
+    <h2 id="menuTitle" class="section-title">🍽 Menu</h2>
 
     <p id="foodCount" class="food-count">Showing 0 foods</p>
 
+    <div id="restaurantHeader" class="restaurant-header">
+      <div class="restaurant-title">
+        <div>
+          <h3 id="restaurantName">Restaurant Menu</h3>
+          <p id="restaurantCuisine">Loading restaurant details...</p>
+        </div>
+        <div id="restaurantRating" class="restaurant-rating">⭐ 0.0</div>
+      </div>
+    </div>
+
     <div id="foods"></div>
 
-    <script src="js/foods.js"></script>
+    <section id="reviewSection" class="review-section">
+      <div class="review-card">
+        <div class="review-summary">
+          <h3>Customer Reviews</h3>
+          <p id="reviewAverage">Loading average rating...</p>
+        </div>
+
+        <form id="reviewForm" class="review-form">
+          <label for="reviewComment">Share your experience</label>
+          <div id="ratingStars" class="rating-stars"></div>
+          <textarea
+            id="reviewComment"
+            placeholder="Write your review..."
+            rows="4"
+          ></textarea>
+          <div class="file-input-wrapper">
+            <label for="reviewPhoto">Add a photo (optional)</label>
+            <input
+              type="file"
+              id="reviewPhoto"
+              accept="image/*"
+              style="display: none"
+            />
+            <button
+              type="button"
+              class="photo-button"
+              onclick="document.getElementById('reviewPhoto').click()"
+            >
+              📷 Choose Photo
+            </button>
+            <span id="photoFileName" class="photo-filename"></span>
+          </div>
+          <button type="submit" class="review-submit-btn">Submit Review</button>
+          <p class="small-text">
+            Rating helps other users choose the best restaurant.
+          </p>
+        </form>
+      </div>
+
+      <div class="review-list-container">
+        <h3>Recent Reviews</h3>
+        <div id="reviewList" class="review-list">
+          <p class="no-reviews">Loading reviews...</p>
+        </div>
+      </div>
+    </section>
+
     <script src="js/common.js"></script>
+    <script src="js/foods.js"></script>
+    <script src="js/navbar.js"></script>
 
     <footer class="footer">
       <div class="footer-content">
-        <h3>🍔 SmartBite Eat Smart • Live Better ©2026 SmartBite</h3>
+        <h3>🍔 SmartBite</h3>
+        <p>Eat Smart • Live Better</p>
+        <div class="footer-links">
+          <a href="dashboard.html">Dashboard</a>
+          <a href="restaurants.html">Restaurants</a>
+          <a href="foods.html">Menu</a>
+          <a href="cart.html">Cart</a>
+          <a href="favorites.html">Wishlist</a>
+          <a href="orders.html">Orders</a>
+        </div>
+        <p class="copyright">© 2026 SmartBite. All rights reserved.</p>
       </div>
     </footer>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+      <a href="index.html" class="nav-item" title="Home">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">Home</span>
+      </a>
+      <a href="dashboard.html" class="nav-item" title="Dashboard">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">Dashboard</span>
+      </a>
+      <a href="restaurants.html" class="nav-item" title="Restaurants">
+        <span class="nav-icon">🍽️</span>
+        <span class="nav-label">Restaurants</span>
+      </a>
+      <a href="cart.html" class="nav-item" title="Cart">
+        <span class="nav-icon">🛒</span>
+        <span class="nav-label">Cart</span>
+        <span class="nav-badge" id="cartBadge" style="display: none">0</span>
+      </a>
+      <a href="#" class="nav-item" id="profileNavBtn" title="Profile">
+        <span class="nav-icon">👤</span>
+        <span class="nav-label">Profile</span>
+      </a>
+    </nav>
+
     <div id="toast" class="toast"></div>
   </body>
 </html>

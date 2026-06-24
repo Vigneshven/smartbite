@@ -11,19 +11,14 @@ import java.util.List;
 @Service
 public class RecommendationService {
 
-    @Autowired
-    private RecommendationDAO recommendationDAO;
+        @Autowired
+        private RecommendationDAO recommendationDAO;
 
-    public List<Recommendation> getRecommendations(
-            int userId) {
+        public List<Recommendation> getRecommendations(
+                        int userId) {
 
-        String category =
-                recommendationDAO
-                        .getFavoriteCategory(userId);
+                String category = recommendationDAO.getFavoriteCategory(userId);
 
-        return recommendationDAO
-                .getRecommendations(
-                        category,
-                        userId);
-    }
+                return recommendationDAO.getRecommendations(category, userId);
+        }
 }

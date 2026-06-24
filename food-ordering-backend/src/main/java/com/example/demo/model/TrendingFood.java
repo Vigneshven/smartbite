@@ -4,6 +4,7 @@ public class TrendingFood {
 
     private String foodName;
     private int totalOrders;
+    private String restaurantName;
 
     private String imageUrl;
     private double price;
@@ -15,6 +16,14 @@ public class TrendingFood {
 
     public void setFoodId(int foodId) {
         this.foodId = foodId;
+    }
+
+    public String getRestaurantName() {
+        return restaurantName;
+    }
+
+    public void setRestaurantName(String restaurantName) {
+        this.restaurantName = restaurantName;
     }
 
     public String getFoodName() {

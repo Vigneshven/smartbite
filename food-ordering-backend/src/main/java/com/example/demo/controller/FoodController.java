@@ -55,6 +55,13 @@ public class FoodController {
                 return foodService.getTrendingFoods();
         }
 
+        @GetMapping("/category/{category}")
+        public List<Food> getFoodsByCategory(
+                        @PathVariable String category) {
+
+                return foodService.getFoodsByCategory(category);
+        }
+
         @GetMapping("/{foodId}")
         public Food getFoodById(
                         @PathVariable int foodId) {

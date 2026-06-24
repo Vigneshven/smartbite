@@ -8,6 +8,7 @@ public class Recommendation {
     private double price;
     private String imageUrl;
     private int restaurantId;
+    private String restaurantName;
 
     public int getFoodId() {
         return foodId;
@@ -23,6 +24,14 @@ public class Recommendation {
 
     public void setRestaurantId(int restaurantId) {
         this.restaurantId = restaurantId;
+    }
+
+    public String getRestaurantName() {
+        return restaurantName;
+    }
+
+    public void setRestaurantName(String restaurantName) {
+        this.restaurantName = restaurantName;
     }
 
     public String getFoodName() {

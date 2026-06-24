@@ -7,6 +7,8 @@ public class Review {
     private int restaurantId;
     private int rating;
     private String comment;
+    private String userName;
+    private String photoUrl;
 
     public int getReviewId() {
         return reviewId;
@@ -46,5 +48,21 @@ public class Review {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 }

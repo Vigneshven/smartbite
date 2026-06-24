@@ -5,6 +5,7 @@ public class LoginResponse {
     private String token;
     private int userId;
     private String fullName;
+    private String role;
 
     public String getToken() {
         return token;
@@ -28,5 +29,13 @@ public class LoginResponse {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

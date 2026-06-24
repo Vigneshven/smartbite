@@ -4,24 +4,36 @@ async function loadNavbarData() {
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
 
-  document.getElementById("username").innerText =
-    localStorage.getItem("username") || "User";
+  const usernameElement = document.getElementById("username");
+  if (usernameElement) {
+    usernameElement.innerText = localStorage.getItem("username") || "User";
+  }
 
-  // Cart Count
-  const cartResponse = await fetch(
-    `http://localhost:8080/api/cart/user/${userId}`,
-    {
-      headers: {
-        Authorization: "Bearer " + token,
+  const cartCountElement = document.getElementById("cartCount");
+
+  if (!token || !userId) {
+    if (cartCountElement) cartCountElement.innerText = "0";
+    return;
+  }
+
+  try {
+    const cartResponse = await fetch(
+      `http://localhost:8080/api/cart/user/${userId}`,
+      {
+        headers: { Authorization: "Bearer " + token },
       },
-    },
-  );
+    );
 
-  const cart = await cartResponse.json();
-
-  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-  document.getElementById("cartCount").innerText = cartCount;
+    if (cartResponse.ok) {
+      const cart = await cartResponse.json();
+      const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+      if (cartCountElement) cartCountElement.innerText = cartCount;
+    } else if (cartCountElement) {
+      cartCountElement.innerText = "0";
+    }
+  } catch (error) {
+    if (cartCountElement) cartCountElement.innerText = "0";
+  }
 }
 
 function formatDateTime(date) {
@@ -100,23 +112,29 @@ function renderOrders(orders) {
 
 async function loadOrders() {
   const token = localStorage.getItem("token");
-
   const userId = localStorage.getItem("userId");
 
-  const response = await fetch(
-    `http://localhost:8080/api/orders/user/${userId}`,
-    {
-      headers: {
-        Authorization: "Bearer " + token,
+  if (!token || !userId) {
+    allOrders = [];
+    renderOrders([]);
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      `http://localhost:8080/api/orders/user/${userId}`,
+      {
+        headers: { Authorization: "Bearer " + token },
       },
-    },
-  );
+    );
 
-  const orders = await response.json();
-
-  allOrders = orders;
-
-  renderOrders(allOrders);
+    const orders = response.ok ? await response.json() : [];
+    allOrders = orders;
+    renderOrders(allOrders);
+  } catch (error) {
+    allOrders = [];
+    renderOrders([]);
+  }
 }
 
 function viewDetails(orderId) {
@@ -125,9 +143,13 @@ function viewDetails(orderId) {
   window.location.href = "order-details.html";
 }
 
-const orderSearch = document.getElementById("orderSearch");
+function attachOrderSearchListener() {
+  const orderSearch =
+    document.getElementById("orderSearch") ||
+    document.getElementById("globalSearch");
 
-if (orderSearch) {
+  if (!orderSearch) return;
+
   orderSearch.addEventListener("keyup", function () {
     const keyword = this.value.toLowerCase();
 
@@ -140,4 +162,6 @@ if (orderSearch) {
     renderOrders(filtered);
   });
 }
+
+onNavbarRendered(attachOrderSearchListener);
 Promise.all([loadNavbarData(), loadOrders()]);

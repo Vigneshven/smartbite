@@ -25,18 +25,26 @@ public class RecommendationDAO {
                                 " ORDER BY TOTAL DESC" +
                                 ") WHERE ROWNUM = 1";
 
-                return jdbcTemplate.queryForObject(
+                List<String> categories = jdbcTemplate.query(
                                 sql,
-                                String.class,
-                                userId);
+                                new Object[] { userId },
+                                (rs, rowNum) -> rs.getString("CATEGORY"));
+
+                return categories.isEmpty() ? null : categories.get(0);
         }
 
         public List<Recommendation> getRecommendations(
                         String category,
                         int userId) {
 
-                String sql = "SELECT * " +
+                if (category == null || category.isBlank()) {
+                        return getPopularRecommendations(userId);
+                }
+
+                String sql = "SELECT f.FOOD_ID, f.FOOD_NAME, f.CATEGORY, f.PRICE, f.IMAGE_URL, f.RESTAURANT_ID, r.RESTAURANT_NAME "
+                                +
                                 "FROM FOODS f " +
+                                "LEFT JOIN RESTAURANTS r ON f.RESTAURANT_ID = r.RESTAURANT_ID " +
                                 "WHERE f.CATEGORY = ? " +
                                 "AND NOT EXISTS (" +
                                 " SELECT 1 " +
@@ -47,7 +55,7 @@ public class RecommendationDAO {
                                 ") " +
                                 "AND ROWNUM <= 5";
 
-                return jdbcTemplate.query(
+                List<Recommendation> recommendations = jdbcTemplate.query(
                                 sql,
                                 new Object[] { category, userId },
                                 (rs, rowNum) -> {
@@ -59,8 +67,36 @@ public class RecommendationDAO {
                                         food.setCategory(rs.getString("CATEGORY"));
                                         food.setPrice(rs.getDouble("PRICE"));
                                         food.setImageUrl(rs.getString("IMAGE_URL"));
-                                        food.setRestaurantId(
-                                                        rs.getInt("RESTAURANT_ID"));
+                                        food.setRestaurantId(rs.getInt("RESTAURANT_ID"));
+                                        food.setRestaurantName(rs.getString("RESTAURANT_NAME"));
+
+                                        return food;
+                                });
+
+                return recommendations.isEmpty()
+                                ? getPopularRecommendations(userId)
+                                : recommendations;
+        }
+
+        public List<Recommendation> getPopularRecommendations(int userId) {
+                String sql = "SELECT f.FOOD_ID, f.FOOD_NAME, f.CATEGORY, f.PRICE, f.IMAGE_URL, f.RESTAURANT_ID, r.RESTAURANT_NAME "
+                                +
+                                "FROM FOODS f " +
+                                "LEFT JOIN RESTAURANTS r ON f.RESTAURANT_ID = r.RESTAURANT_ID " +
+                                "WHERE ROWNUM <= 5";
+
+                return jdbcTemplate.query(
+                                sql,
+                                (rs, rowNum) -> {
+                                        Recommendation food = new Recommendation();
+
+                                        food.setFoodId(rs.getInt("FOOD_ID"));
+                                        food.setFoodName(rs.getString("FOOD_NAME"));
+                                        food.setCategory(rs.getString("CATEGORY"));
+                                        food.setPrice(rs.getDouble("PRICE"));
+                                        food.setImageUrl(rs.getString("IMAGE_URL"));
+                                        food.setRestaurantId(rs.getInt("RESTAURANT_ID"));
+                                        food.setRestaurantName(rs.getString("RESTAURANT_NAME"));
 
                                         return food;
                                 });

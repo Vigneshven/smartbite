@@ -9,110 +9,89 @@
   </head>
 
   <body>
-    <div class="navbar">
-      <div class="nav-left">
-        <h2>🍔 SmartBite Dashboard</h2>
-      </div>
+    <div class="navbar"></div>
 
-      <div class="nav-right">
-        <div class="profile-menu">
-          <button class="profile-btn" onclick="toggleProfileMenu()">
-            👤 <span id="username"></span> ▼
-          </button>
+    <!-- Main scrollable content area (leaves room for bottom nav) -->
+    <main class="dashboard-main">
+      <!-- Greeting Section -->
+      <section class="greeting-section">
+        <h1 id="greetingMessage">Hello, Guest 👋</h1>
+        <p id="timeGreeting">
+          Unlock personalized recommendations and order tracking
+        </p>
+      </section>
 
-          <div id="profileDropdown" class="profile-dropdown">
-            <button onclick="window.location.href = 'dashboard.html'">
-              🏠 Dashboard
-            </button>
-
-            <button onclick="window.location.href = 'orders.html'">
-              📦 My Orders
-            </button>
-
-            <button onclick="window.location.href = 'favorites.html'">
-              ❤️ Wishlist
-            </button>
-
-            <button onclick="logout()">🚪 Logout</button>
-          </div>
+      <!-- 🔥 TRENDING RESTAURANTS -->
+      <section class="dashboard-section">
+        <div class="section-header">
+          <h2 class="section-title">Trending Restaurants</h2>
+          <a href="restaurants.html" class="view-all">View All</a>
         </div>
+        <div id="trendingRestaurants" class="restaurants-scroll"></div>
+      </section>
 
-        <button onclick="window.location.href = 'restaurants.html'">
-          Restaurants
-        </button>
+      <!-- 🍔 POPULAR FOODS -->
+      <section class="dashboard-section">
+        <div class="section-header">
+          <h2 class="section-title">Popular Foods</h2>
+          <a href="foods.html" class="view-all">View All</a>
+        </div>
+        <div id="popularFoods" class="foods-grid"></div>
+      </section>
 
-        <button onclick="window.location.href = 'cart.html'">
-          🛒 Cart
+      <!-- 🎉 TODAY'S OFFERS -->
+      <section class="dashboard-section">
+        <div id="todaysOffers" class="offers-banner"></div>
+      </section>
 
-          <span id="cartCount" class="nav-badge">0</span>
-        </button>
+      <!-- 🏷️ CATEGORIES -->
+      <section class="dashboard-section">
+        <div class="section-header">
+          <h2 class="section-title">Categories</h2>
+        </div>
+        <div id="categories" class="categories-grid"></div>
+      </section>
 
-        <button onclick="window.location.href = 'favorites.html'">
-          ❤️ Wishlist
+      <!-- Additional sections (hidden on mobile, visible on tablet+) -->
+      <section class="dashboard-section hidden-mobile">
+        <h2 class="section-title">⭐ Recommended Based On Orders</h2>
+        <div id="recommendations" class="dashboard-grid"></div>
+      </section>
 
-          <span id="wishlistCount" class="nav-badge">0</span>
-        </button>
+      <section class="dashboard-section hidden-mobile">
+        <h2 class="section-title">❤️ Based On Your Wishlist</h2>
+        <div id="wishlistRecommendations" class="dashboard-grid"></div>
+      </section>
+    </main>
 
-        <button onclick="toggleDarkMode()">🌙</button>
-      </div>
-    </div>
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+      <a href="index.html" class="nav-item active" title="Home">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">Home</span>
+      </a>
+      <a href="dashboard.html" class="nav-item" title="Dashboard">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">Dashboard</span>
+      </a>
+      <a href="restaurants.html" class="nav-item" title="Restaurants">
+        <span class="nav-icon">🍽️</span>
+        <span class="nav-label">Restaurants</span>
+      </a>
+      <a href="cart.html" class="nav-item" title="Cart">
+        <span class="nav-icon">🛒</span>
+        <span class="nav-label">Cart</span>
+        <span class="nav-badge" id="cartBadge" style="display: none">0</span>
+      </a>
+      <a href="#" class="nav-item" id="profileNavBtn" title="Profile">
+        <span class="nav-icon">👤</span>
+        <span class="nav-label">Profile</span>
+      </a>
+    </nav>
 
-    <div class="hero-banner">
-      <h1>Welcome back 🍽</h1>
-
-      <p>
-        Discover trending dishes, personalized recommendations and your
-        favourite restaurants.
-      </p>
-    </div>
-
-    <div class="dashboard-shortcuts">
-      <div onclick="window.location.href = 'restaurants.html'">
-        🍽
-
-        <p>Browse Restaurants</p>
-      </div>
-
-      <div onclick="window.location.href = 'cart.html'">
-        🛒
-
-        <p>My Cart</p>
-      </div>
-
-      <div onclick="window.location.href = 'orders.html'">
-        📦
-
-        <p>Orders</p>
-      </div>
-
-      <div onclick="window.location.href = 'favorites.html'">
-        ❤️
-
-        <p>Wishlist</p>
-      </div>
-    </div>
-
-    <!-- Trending -->
-
-    <h2 class="section-title">🔥 Trending Foods</h2>
-
-    <div id="trendingFoods" class="dashboard-grid"></div>
-
-    <!-- Recommendation -->
-
-    <h2 class="section-title">⭐ Recommended For You</h2>
-
-    <div id="recommendations" class="food-grid"></div>
-
-    <footer class="footer">
-      <div class="footer-content">
-        <h3>🍔 SmartBite</h3>
-
-        <p>Eat Smart • Live Better</p>
-      </div>
-    </footer>
-
-    <script src="js/dashboard.js"></script>
     <script src="js/common.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/navbar.js"></script>
+    <div id="toast" class="toast"></div>
   </body>
 </html>

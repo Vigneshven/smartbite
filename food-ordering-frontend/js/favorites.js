@@ -11,42 +11,42 @@ async function loadNavbarData() {
     usernameElement.innerText = username || "User";
   }
 
-  // Wishlist Count
-  const favResponse = await fetch(
-    `http://localhost:8080/api/favorites/${userId}`,
-    {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    },
-  );
-
-  const favorites = await favResponse.json();
-
   const wishlistCount = document.getElementById("wishlistCount");
-
-  if (wishlistCount) {
-    wishlistCount.innerText = favorites.length;
-  }
-
-  // Cart Count
-  const cartResponse = await fetch(
-    `http://localhost:8080/api/cart/user/${userId}`,
-    {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    },
-  );
-
-  const cartItems = await cartResponse.json();
-
-  const totalCart = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-
   const cartCount = document.getElementById("cartCount");
 
-  if (cartCount) {
-    cartCount.innerText = totalCart;
+  if (!token || !userId) {
+    if (wishlistCount) wishlistCount.innerText = "0";
+    if (cartCount) cartCount.innerText = "0";
+    return;
+  }
+
+  try {
+    const [favResponse, cartResponse] = await Promise.all([
+      fetch(`http://localhost:8080/api/favorites/${userId}`, {
+        headers: { Authorization: "Bearer " + token },
+      }),
+      fetch(`http://localhost:8080/api/cart/user/${userId}`, {
+        headers: { Authorization: "Bearer " + token },
+      }),
+    ]);
+
+    if (favResponse.ok) {
+      const favorites = await favResponse.json();
+      if (wishlistCount) wishlistCount.innerText = favorites.length;
+    } else if (wishlistCount) {
+      wishlistCount.innerText = "0";
+    }
+
+    if (cartResponse.ok) {
+      const cartItems = await cartResponse.json();
+      const totalCart = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+      if (cartCount) cartCount.innerText = totalCart;
+    } else if (cartCount) {
+      cartCount.innerText = "0";
+    }
+  } catch (error) {
+    if (wishlistCount) wishlistCount.innerText = "0";
+    if (cartCount) cartCount.innerText = "0";
   }
 }
 function renderFavorites(foods) {
@@ -126,25 +126,38 @@ async function loadFavoritesPage() {
   const userId = localStorage.getItem("userId");
   const token = localStorage.getItem("token");
 
-  const response = await fetch(
-    `http://localhost:8080/api/favorites/${userId}`,
-    {
-      headers: {
-        Authorization: "Bearer " + token,
+  if (!token || !userId) {
+    allFavorites = [];
+    renderFavorites([]);
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      `http://localhost:8080/api/favorites/${userId}`,
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
       },
-    },
-  );
-
-  const foods = await response.json();
-
-  allFavorites = foods;
-
-  renderFavorites(foods);
+    );
+    const foods = response.ok ? await response.json() : [];
+    allFavorites = foods;
+    renderFavorites(foods);
+  } catch (error) {
+    allFavorites = [];
+    renderFavorites([]);
+  }
 }
 
 async function removeFavorite(foodId) {
   const userId = localStorage.getItem("userId");
   const token = localStorage.getItem("token");
+
+  if (!token || !userId) {
+    requireLogin();
+    return;
+  }
 
   const response = await fetch(
     `http://localhost:8080/api/favorites/remove?userId=${userId}&foodId=${foodId}`,
@@ -172,6 +185,11 @@ async function addToCart(foodId) {
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
 
+  if (!token || !userId) {
+    requireLogin();
+    return;
+  }
+
   const response = await fetch("http://localhost:8080/api/cart/add", {
     method: "POST",
     headers: {
@@ -188,7 +206,6 @@ async function addToCart(foodId) {
   const text = await response.text();
   if (response.ok) {
     showToast("🛒 Added To Cart", "success");
-
     await loadNavbarData();
   } else {
     showToast(text, "error");
@@ -199,9 +216,13 @@ function goBack() {
   window.location.href = "foods.html";
 }
 
-const favoriteSearch = document.getElementById("favoriteSearch");
+function attachFavoriteSearchListener() {
+  const favoriteSearch =
+    document.getElementById("favoriteSearch") ||
+    document.getElementById("globalSearch");
 
-if (favoriteSearch) {
+  if (!favoriteSearch) return;
+
   favoriteSearch.addEventListener("input", function () {
     const keyword = this.value.toLowerCase();
 
@@ -213,4 +234,5 @@ if (favoriteSearch) {
   });
 }
 
+onNavbarRendered(attachFavoriteSearchListener);
 Promise.all([loadNavbarData(), loadFavoritesPage()]);

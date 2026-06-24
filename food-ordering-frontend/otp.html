@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Verify OTP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="login-card">
+        <img src="images/logo.png" class="logo" />
+
+        <h2>Verify OTP</h2>
+        <p class="tagline">Enter the OTP sent to your email</p>
+
+        <input type="email" id="otpEmail" placeholder="Email" />
+        <input type="text" id="otpValue" placeholder="Enter OTP" />
+
+        <button onclick="verifyOtp()">Verify</button>
+        <button type="button" class="secondary-button" onclick="resendOtp()">
+          Resend OTP
+        </button>
+        <p id="otpMessage"></p>
+      </div>
+    </div>
+
+    <script src="js/otp.js"></script>
+  </body>
+</html>

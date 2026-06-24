@@ -19,12 +19,11 @@ public class FavoriteController {
     public String addFavorite(
             @RequestBody Favorite favorite) {
 
-        int result =
-                favoriteService
-                        .addFavorite(
-                                favorite);
+        int result = favoriteService
+                .addFavorite(
+                        favorite);
 
-        if(result > 0) {
+        if (result > 0) {
             return "Added To Favorites";
         }
 
@@ -33,28 +32,33 @@ public class FavoriteController {
 
     @PostMapping("/toggle")
     public String toggleFavorite(@RequestBody Favorite favorite) {
-    return favoriteService.toggleFavorite(favorite);
+        return favoriteService.toggleFavorite(favorite);
     }
 
     @GetMapping("/{userId}")
     public List<Food> getFavorites(@PathVariable int userId) {
-    return favoriteService.getFavorites(userId);
+        return favoriteService.getFavorites(userId);
+    }
+
+    @GetMapping("/recommendations/{userId}")
+    public List<Food> getWishlistRecommendations(@PathVariable int userId) {
+        return favoriteService.getWishlistRecommendations(userId);
     }
 
     @DeleteMapping("/remove")
     public String removeFavorite(
-        @RequestParam int userId,
-        @RequestParam int foodId) {
+            @RequestParam int userId,
+            @RequestParam int foodId) {
 
-    int result = favoriteService.removeByUserAndFood(userId, foodId);
-    return result > 0 ? "Removed" : "Failed";
+        int result = favoriteService.removeByUserAndFood(userId, foodId);
+        return result > 0 ? "Removed" : "Failed";
     }
 
     @GetMapping("/exists")
     public boolean isFavorite(
-        @RequestParam int userId,
-        @RequestParam int foodId) {
+            @RequestParam int userId,
+            @RequestParam int foodId) {
 
-    return favoriteService.exists(userId, foodId);
+        return favoriteService.exists(userId, foodId);
     }
 }

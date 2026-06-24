@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+  <head>
+    <title>SmartBite Admin Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body>
+    <div class="admin-navbar">
+      <div class="admin-brand">🍔 SmartBite Admin</div>
+      <div class="admin-actions">
+        <button onclick="logoutAdmin()">Logout</button>
+      </div>
+    </div>
+
+    <main class="admin-main">
+      <section class="admin-hero">
+        <h1>Admin Dashboard</h1>
+        <p>
+          Monitor users, foods, restaurants, orders, revenue, and top sellers.
+        </p>
+      </section>
+
+      <section class="admin-cards-grid">
+        <article class="stat-card">
+          <span class="stat-label">Total Users</span>
+          <strong id="totalUsers">0</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">Total Foods</span>
+          <strong id="totalFoods">0</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">Restaurants</span>
+          <strong id="totalRestaurants">0</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">Orders</span>
+          <strong id="totalOrders">0</strong>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label">Revenue</span>
+          <strong id="totalRevenue">₹0</strong>
+        </article>
+      </section>
+
+      <section class="admin-section">
+        <h2>Top Selling Foods</h2>
+        <div id="topSellingFoods" class="top-selling-list"></div>
+      </section>
+
+      <section class="admin-section">
+        <h2>Revenue Trend</h2>
+        <div id="revenueTrend" class="chart-card">Chart coming soon</div>
+      </section>
+    </main>
+
+    <script src="js/admin-dashboard.js"></script>
+  </body>
+</html>

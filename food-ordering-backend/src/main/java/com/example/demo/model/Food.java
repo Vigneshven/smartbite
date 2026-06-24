@@ -4,6 +4,7 @@ public class Food {
 
     private int foodId;
     private int restaurantId;
+    private String restaurantName;
     private String foodName;
     private String category;
     private double price;
@@ -38,6 +39,14 @@ public class Food {
 
     public void setRestaurantId(int restaurantId) {
         this.restaurantId = restaurantId;
+    }
+
+    public String getRestaurantName() {
+        return restaurantName;
+    }
+
+    public void setRestaurantName(String restaurantName) {
+        this.restaurantName = restaurantName;
     }
 
     public String getFoodName() {

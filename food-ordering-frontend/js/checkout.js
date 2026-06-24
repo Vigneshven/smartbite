@@ -3,6 +3,11 @@ async function placeOrder() {
 
   const userId = localStorage.getItem("userId");
 
+  if (!token || !userId) {
+    requireLogin("place your order");
+    return;
+  }
+
   const paymentMethod = document.querySelector(
     'input[name="payment"]:checked',
   ).value;

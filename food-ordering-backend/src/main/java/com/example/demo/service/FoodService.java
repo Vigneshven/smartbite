@@ -50,4 +50,9 @@ public class FoodService {
 
     }
 
+
+    public List<Food> getFoodsByCategory(String category) {
+        return foodDAO.getFoodsByCategory(category);
+    }
+
 }

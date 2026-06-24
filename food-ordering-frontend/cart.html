@@ -7,80 +7,57 @@
   </head>
 
   <body>
-    <!-- NAVBAR -->
-    <div class="navbar">
-      <div class="nav-left">
-        <h2>🍔 SmartBite</h2>
-      </div>
-
-      <div class="nav-center">
-        <input
-          type="text"
-          id="cartSearch"
-          placeholder="🔍 Search cart items..."
-          autocomplete="off"
-        />
-      </div>
-
-      <div class="nav-right">
-        <div class="profile-menu">
-          <button class="profile-btn" onclick="toggleProfileMenu()">
-            👤 <span id="username">User</span> ▼
-          </button>
-
-          <div id="profileDropdown" class="profile-dropdown">
-            <div class="profile-header">
-              <h3 id="profileName"></h3>
-              <p id="profileEmail"></p>
-              <p id="profilePhone"></p>
-            </div>
-
-            <button onclick="window.location.href = 'dashboard.html'">
-              🏠 Dashboard
-            </button>
-
-            <button onclick="window.location.href = 'orders.html'">
-              📦 My Orders
-            </button>
-
-            <button onclick="window.location.href = 'favorites.html'">
-              ❤️ Wishlist
-            </button>
-
-            <button onclick="logout()">🚪 Logout</button>
-          </div>
-        </div>
-
-        <button onclick="window.location.href = 'restaurants.html'">
-          🍽 Restaurants
-        </button>
-
-        <button onclick="window.location.href = 'foods.html'">🍔 Menu</button>
-
-        <button disabled>🛒 Cart</button>
-
-        <button onclick="window.location.href = 'favorites.html'">
-          ❤️ Wishlist
-
-          <span id="wishlistCount" class="nav-badge"> 0 </span>
-        </button>
-
-        <button onclick="toggleDarkMode()">🌙</button>
-      </div>
-    </div>
+    <div class="navbar"></div>
 
     <p id="cartItemCount" class="page-count"></p>
 
     <div id="cart"></div>
 
-    <script src="js/cart.js"></script>
     <script src="js/common.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/navbar.js"></script>
 
     <footer class="footer">
       <div class="footer-content">
         <h3>🍔 SmartBite</h3>
+        <p>Eat Smart • Live Better</p>
+        <div class="footer-links">
+          <a href="dashboard.html">Dashboard</a>
+          <a href="restaurants.html">Restaurants</a>
+          <a href="foods.html">Menu</a>
+          <a href="cart.html">Cart</a>
+          <a href="favorites.html">Wishlist</a>
+          <a href="orders.html">Orders</a>
+        </div>
+        <p class="copyright">© 2026 SmartBite. All rights reserved.</p>
       </div>
     </footer>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+      <a href="index.html" class="nav-item" title="Home">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">Home</span>
+      </a>
+      <a href="dashboard.html" class="nav-item" title="Dashboard">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">Dashboard</span>
+      </a>
+      <a href="restaurants.html" class="nav-item" title="Restaurants">
+        <span class="nav-icon">🍽️</span>
+        <span class="nav-label">Restaurants</span>
+      </a>
+      <a href="cart.html" class="nav-item active" title="Cart">
+        <span class="nav-icon">🛒</span>
+        <span class="nav-label">Cart</span>
+        <span class="nav-badge" id="cartBadge" style="display: none">0</span>
+      </a>
+      <a href="#" class="nav-item" id="profileNavBtn" title="Profile">
+        <span class="nav-icon">👤</span>
+        <span class="nav-label">Profile</span>
+      </a>
+    </nav>
+
     <div id="toast" class="toast"></div>
   </body>
 </html>

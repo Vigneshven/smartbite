@@ -20,21 +20,49 @@ async function loadNavbarData() {
   const userId = localStorage.getItem("userId");
 
   const username = localStorage.getItem("username");
+  const usernameElement = document.getElementById("username");
 
-  document.getElementById("username").innerText = username || "User";
+  if (usernameElement) {
+    usernameElement.innerText = username || "User";
+  }
 
-  const favoriteResponse = await fetch(
-    `http://localhost:8080/api/favorites/${userId}`,
-    {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    },
-  );
+  const wishlistCount = document.getElementById("wishlistCount");
+  const cartCount = document.getElementById("cartCount");
 
-  const favorites = await favoriteResponse.json();
+  if (!token || !userId) {
+    if (wishlistCount) wishlistCount.innerText = "0";
+    if (cartCount) cartCount.innerText = "0";
+    return;
+  }
 
-  document.getElementById("wishlistCount").innerText = favorites.length;
+  try {
+    const [favoriteResponse, cartResponse] = await Promise.all([
+      fetch(`http://localhost:8080/api/favorites/${userId}`, {
+        headers: { Authorization: "Bearer " + token },
+      }),
+      fetch(`http://localhost:8080/api/cart/user/${userId}`, {
+        headers: { Authorization: "Bearer " + token },
+      }),
+    ]);
+
+    if (favoriteResponse.ok) {
+      const favorites = await favoriteResponse.json();
+      if (wishlistCount) wishlistCount.innerText = favorites.length;
+    } else if (wishlistCount) {
+      wishlistCount.innerText = "0";
+    }
+
+    if (cartResponse.ok) {
+      const cartItems = await cartResponse.json();
+      const totalCart = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+      if (cartCount) cartCount.innerText = totalCart;
+    } else if (cartCount) {
+      cartCount.innerText = "0";
+    }
+  } catch (error) {
+    if (wishlistCount) wishlistCount.innerText = "0";
+    if (cartCount) cartCount.innerText = "0";
+  }
 }
 
 function renderCart(items) {
@@ -167,158 +195,107 @@ function renderCart(items) {
   const finalTotal = total + deliveryFee - discount;
 
   html += `
-<div class="checkout-card">
+<!-- ORDER SUMMARY SECTION -->
+<div class="checkout-section">
+    <h2 class="section-header">🧾 Order Summary</h2>
+    
+    <div class="summary-content">
+        <div class="price-row">
+            <span>Subtotal</span>
+            <span>₹ ${total}</span>
+        </div>
 
-    <h2 class="checkout-title">
-        🧾 Order Summary
-    </h2>
-
-    <div class="price-row">
-
-        <span>Subtotal</span>
-
-        <span>₹ ${total}</span>
-
-    </div>
-
-    <div class="price-row">
-
-    <span>Delivery Fee</span>
-
-    <span>
+        <div class="price-row">
+            <span>Delivery Fee</span>
+            <span>
+                ${
+                  deliveryFee === 0
+                    ? '<span class="free-text">FREE</span>'
+                    : "₹ " + deliveryFee
+                }
+            </span>
+        </div>
 
         ${
-          deliveryFee === 0
-            ? '<span class="free-text">FREE</span>'
-            : "₹ " + deliveryFee
+          deliveryFee > 0
+            ? `<p class="delivery-note">🚚 Add ₹ ${500 - total} more for FREE Delivery</p>`
+            : `<p class="delivery-success">🎉 You unlocked FREE Delivery!</p>`
         }
 
-    </span>
+        <div class="price-row">
+            <span>Discount</span>
+            <span style="color:green;">- ₹ ${discount}</span>
+        </div>
 
+        <div class="price-row total-row">
+            <span>Total</span>
+            <span>₹ ${finalTotal}</span>
+        </div>
     </div>
-
-    ${
-      deliveryFee > 0
-        ? `
-    <p class="delivery-note">
-
-        🚚 Add ₹ ${500 - total} more for FREE Delivery
-
-    </p>
-    `
-        : `
-    <p class="delivery-success">
-
-        🎉 You unlocked FREE Delivery!
-
-    </p>
-    `
-    }
-
-    <div class="promo-box">
-
-    <input
-
-        id="promoCode"
-
-        class="checkout-input"
-
-        placeholder="🎫 Enter Promo Code">
-
-    <button
-
-        class="promo-btn"
-
-        onclick="applyPromo(${total})">
-
-        Apply
-
-    </button>
-
 </div>
 
-    <div class="price-row">
-
-    <span>Discount</span>
-
-    <span style="color:green;">
-
-        - ₹ ${discount}
-
-    </span>
-
-</div>
-
-    <div class="price-row total-row">
-
-        <span>Total</span>
-
-<span>₹ ${finalTotal}</span>
-
-    </div>
-
+<!-- DELIVERY ADDRESS SECTION -->
+<div class="checkout-section">
+    <h2 class="section-header">📍 Delivery Address</h2>
+    
     <input
         id="deliveryAddress"
         class="checkout-input"
         type="text"
-        placeholder="📍 Enter Delivery Address">
-
-    <div class="payment-container">
-
-    <div class="payment-card active"
-
-        onclick="selectPayment(this,'COD')">
-
-        💵
-
-        <h4>Cash</h4>
-
-        <p>Pay after delivery</p>
-
-    </div>
-
-    <div class="payment-card"
-
-        onclick="selectPayment(this,'UPI')">
-
-        📱
-
-        <h4>UPI</h4>
-
-        <p>Google Pay / PhonePe</p>
-
-    </div>
-
-    <div class="payment-card"
-
-        onclick="selectPayment(this,'CARD')">
-
-        💳
-
-        <h4>Card</h4>
-
-        <p>Debit / Credit Card</p>
-
-    </div>
-
+        placeholder="Enter your full delivery address">
 </div>
 
-<input
+<!-- PROMO CODE SECTION -->
+<div class="checkout-section">
+    <h2 class="section-header">🎫 Promo Code</h2>
+    
+    <div class="promo-box">
+        <input
+            id="promoCode"
+            class="checkout-input"
+            placeholder="Enter promo code (SAVE50, SAVE100)">
+        <button
+            class="promo-btn"
+            onclick="applyPromo(${total})">
+            Apply
+        </button>
+    </div>
+</div>
 
-    type="hidden"
+<!-- PAYMENT METHOD SECTION -->
+<div class="checkout-section">
+    <h2 class="section-header">💳 Payment Method</h2>
+    
+    <div class="payment-container">
+        <div class="payment-card active" onclick="selectPayment(this,'COD')">
+            💵
+            <h4>Cash</h4>
+            <p>Pay after delivery</p>
+        </div>
 
-    id="paymentMethod"
+        <div class="payment-card" onclick="selectPayment(this,'UPI')">
+            📱
+            <h4>UPI</h4>
+            <p>Google Pay / PhonePe</p>
+        </div>
 
-    value="COD">
+        <div class="payment-card" onclick="selectPayment(this,'CARD')">
+            💳
+            <h4>Card</h4>
+            <p>Debit / Credit Card</p>
+        </div>
+    </div>
 
+    <input type="hidden" id="paymentMethod" value="COD">
+</div>
+
+<!-- PLACE ORDER SECTION -->
+<div class="checkout-section">
     <button
         class="place-order-btn"
         onclick="placeOrder()">
-
-        Place Order
-
+        ✓ Place Order
     </button>
-
 </div>
 `;
 
@@ -332,30 +309,44 @@ function openFoodDetails(foodId) {
 
 async function loadCart() {
   const token = localStorage.getItem("token");
-
   const userId = localStorage.getItem("userId");
 
-  const response = await fetch(
-    `http://localhost:8080/api/cart/user/${userId}`,
-    {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    },
-  );
+  if (!token || !userId) {
+    allCartItems = [];
+    applyCartFilter();
+    return;
+  }
 
-  const items = (await response.json()) || [];
-  allCartItems = items;
+  try {
+    const response = await fetch(
+      `http://localhost:8080/api/cart/user/${userId}`,
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      },
+    );
+
+    const items = response.ok ? await response.json() : [];
+    allCartItems = items || [];
+  } catch (error) {
+    allCartItems = [];
+  }
 
   applyCartFilter();
 }
 
 async function removeItem(cartId) {
   const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId");
+
+  if (!token || !userId) {
+    requireLogin();
+    return;
+  }
 
   await fetch(`http://localhost:8080/api/cart/${cartId}`, {
     method: "DELETE",
-
     headers: {
       Authorization: "Bearer " + token,
     },
@@ -363,7 +354,6 @@ async function removeItem(cartId) {
   showToast("❌ Item Removed");
 
   await loadNavbarData();
-
   loadCart();
 }
 
@@ -435,22 +425,44 @@ async function placeOrder() {
   const message = await response.text();
 
   if (response.ok) {
-    showToast("🎉 Order Placed Successfully");
+    // Show success animation
+    showSuccessAnimation();
 
     await loadNavbarData();
 
     setTimeout(() => {
       window.location.href = "orders.html";
-    }, 1500);
+    }, 2500);
   } else {
     showToast(message);
   }
+}
+
+function showSuccessAnimation() {
+  const overlay = document.createElement("div");
+  overlay.className = "success-overlay";
+  overlay.innerHTML = `
+    <div class="success-container">
+      <div class="success-icon">✓</div>
+      <div class="success-message">
+        <h2>Order Placed!</h2>
+        <p>Your delicious food is on the way</p>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
 }
 
 async function updateQty(cartId, quantity) {
   if (quantity < 1) return;
 
   const token = localStorage.getItem("token");
+  const userId = localStorage.getItem("userId");
+
+  if (!token || !userId) {
+    requireLogin();
+    return;
+  }
 
   const response = await fetch("http://localhost:8080/api/cart/update", {
     method: "PUT",
@@ -468,9 +480,7 @@ async function updateQty(cartId, quantity) {
 
   if (response.status === 200) {
     showToast("🛒 Cart Updated");
-
     await loadNavbarData();
-
     await loadCart();
   } else {
     alert("Update Failed: " + text);
@@ -481,7 +491,12 @@ async function addToCart(foodId) {
   const userId = localStorage.getItem("userId");
   const token = localStorage.getItem("token");
 
-  await fetch("http://localhost:8080/api/cart/add", {
+  if (!token || !userId) {
+    requireLogin();
+    return;
+  }
+
+  const response = await fetch("http://localhost:8080/api/cart/add", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -494,7 +509,13 @@ async function addToCart(foodId) {
     }),
   });
 
-  alert("Added to cart 🛒");
+  if (response.ok) {
+    showToast("🛒 Added to cart");
+    await loadNavbarData();
+    await loadCart();
+  } else {
+    showToast("Failed to add to cart", "error");
+  }
 }
 function applyPromo(total) {
   const promo = document.getElementById("promoCode").value.trim().toUpperCase();

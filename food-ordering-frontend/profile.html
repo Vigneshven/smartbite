@@ -7,7 +7,59 @@
 
   <body>
     <div class="navbar">
-      <h2>👤 My Profile</h2>
+      <div class="nav-left">
+        <h2>🍔 SmartBite</h2>
+      </div>
+
+      <div class="nav-center">
+        <input type="search" id="globalSearch" placeholder="🔍 Search..." />
+      </div>
+
+      <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+
+      <div class="nav-right" id="navMenu">
+        <div class="profile-menu">
+          <button class="profile-btn" onclick="toggleProfileMenu()">
+            👤 <span id="username">User</span> ▼
+          </button>
+
+          <div class="profile-dropdown" id="profileDropdown">
+            <div class="profile-header">
+              <h3 id="profileName"></h3>
+              <p id="profileEmail"></p>
+              <p id="profilePhone"></p>
+            </div>
+
+            <button onclick="location.href = 'dashboard.html'">
+              🏠 Dashboard
+            </button>
+
+            <button onclick="location.href = 'restaurants.html'">
+              🍽 Restaurants
+            </button>
+
+            <button onclick="location.href = 'foods.html'">🍔 Menu</button>
+
+            <button onclick="location.href = 'cart.html'">
+              🛒 Cart
+              <span id="cartCount">0</span>
+            </button>
+
+            <button onclick="location.href = 'favorites.html'">
+              ❤️ Wishlist
+              <span id="wishlistCount">0</span>
+            </button>
+
+            <button onclick="location.href = 'orders.html'">
+              📦 My Orders
+            </button>
+
+            <button onclick="toggleDarkMode()">🌙 Dark Mode</button>
+
+            <button onclick="logout()">🚪 Logout</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="profile-card">
@@ -18,7 +70,35 @@
       <p id="phone"></p>
     </div>
 
+    <script src="js/common.js"></script>
     <script src="js/profile.js"></script>
+    <script src="js/navbar.js"></script>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+      <a href="index.html" class="nav-item" title="Home">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">Home</span>
+      </a>
+      <a href="dashboard.html" class="nav-item" title="Dashboard">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">Dashboard</span>
+      </a>
+      <a href="restaurants.html" class="nav-item" title="Restaurants">
+        <span class="nav-icon">🍽️</span>
+        <span class="nav-label">Restaurants</span>
+      </a>
+      <a href="cart.html" class="nav-item" title="Cart">
+        <span class="nav-icon">🛒</span>
+        <span class="nav-label">Cart</span>
+        <span class="nav-badge" id="cartBadge" style="display: none">0</span>
+      </a>
+      <a href="#" class="nav-item active" id="profileNavBtn" title="Profile">
+        <span class="nav-icon">👤</span>
+        <span class="nav-label">Profile</span>
+      </a>
+    </nav>
+
     <div id="toast" class="toast"></div>
   </body>
 </html>
