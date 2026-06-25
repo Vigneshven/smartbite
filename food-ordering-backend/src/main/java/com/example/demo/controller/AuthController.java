@@ -83,12 +83,12 @@ public class AuthController {
         boolean ok = otpService.verifyOtp(request.getEmail(), request.getOtp());
 
         if (!ok) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid OTP");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         com.example.demo.model.User pending = otpService.getPendingUser(request.getEmail());
         if (pending == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Pending registration not found");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         // preserve raw password before registration encodes it
