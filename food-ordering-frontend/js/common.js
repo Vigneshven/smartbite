@@ -1,7 +1,7 @@
 const API_BASE_URL =
   window.location.hostname === "localhost"
     ? "http://localhost:8080"
-    : "https://smartbite-api-dev.onrender.com";
+    : "https://smartbite-api-prod.onrender.com";
 
 const NAV_LINKS = [
   { text: "Home", href: "index.html" },
