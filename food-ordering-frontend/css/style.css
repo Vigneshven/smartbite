@@ -4650,3 +4650,511 @@ body {
 .hero-banner {
   animation: fadeIn 0.5s ease-out;
 }
+
+/* ============================================
+   PROFILE PAGE STYLING
+   Responsive profile layout for mobile & desktop
+============================================ */
+
+/* Profile Main Container */
+.profile-main {
+  min-height: calc(100vh - var(--navbar-h) - 80px);
+  padding: 20px 16px;
+  background: var(--bg);
+  margin-top: var(--navbar-h);
+  margin-bottom: 80px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.profile-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.profile-container h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--text);
+  text-align: center;
+}
+
+.profile-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Profile Card */
+.profile-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 20px;
+  box-shadow: var(--shadow);
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Profile Avatar Section */
+.profile-avatar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.avatar-icon {
+  font-size: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+  border-radius: 50%;
+  color: #fff;
+  box-shadow: 0 8px 16px rgba(255, 87, 34, 0.3);
+}
+
+/* Profile Info Section */
+.profile-info {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profile-info h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 12px 0;
+  color: var(--text);
+}
+
+.profile-detail {
+  font-size: 0.95rem;
+  margin: 8px 0;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.profile-detail strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Profile Stats */
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin: 20px 0;
+  padding: 16px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 87, 34, 0.05),
+    rgba(255, 152, 0, 0.05)
+  );
+  border-radius: 12px;
+}
+
+.stat {
+  text-align: center;
+  padding: 12px;
+}
+
+.stat-value {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--brand);
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Divider */
+.profile-divider {
+  border: 0;
+  height: 1px;
+  background: var(--border);
+  margin: 20px 0;
+}
+
+/* Recent Orders Section */
+.profile-card h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 16px 0 12px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.recent-orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: all var(--transition);
+}
+
+.order-item:hover {
+  box-shadow: var(--shadow);
+  transform: translateY(-2px);
+  border-color: var(--brand);
+}
+
+.order-info {
+  flex: 1;
+}
+
+.order-id {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 4px 0;
+}
+
+.order-date {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.order-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.order-amount {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--brand);
+  margin: 0;
+}
+
+.order-status {
+  display: inline-block;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 20px;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+/* Order Status Colors */
+.order-status.pending {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.order-status.confirmed {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.order-status.delivered {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.order-status.cancelled {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.order-status.processing {
+  background: #f3e5f5;
+  color: #6a1b9a;
+}
+
+.no-orders {
+  text-align: center;
+  padding: 32px 20px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+/* Auth Unlock Message */
+.auth-unlock-message {
+  text-align: center;
+  padding: 48px 24px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 87, 34, 0.1),
+    rgba(255, 152, 0, 0.1)
+  );
+  border-radius: var(--radius);
+  border: 2px solid var(--border);
+}
+
+.auth-unlock-message h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 12px 0;
+  color: var(--text);
+}
+
+.auth-unlock-message p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin: 12px 0 24px;
+}
+
+.auth-unlock-message .btn {
+  margin: 0 8px;
+}
+
+/* Error Message */
+.error-message {
+  text-align: center;
+  padding: 32px 24px;
+  background: #ffebee;
+  border-radius: var(--radius);
+  border: 1px solid #ffcdd2;
+}
+
+.error-message p {
+  color: #c62828;
+  font-size: 0.95rem;
+  margin-bottom: 16px;
+}
+
+/* Profile Actions */
+.profile-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.profile-actions .btn {
+  flex: 1;
+  max-width: 200px;
+}
+
+/* Buttons */
+.btn {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  font-family: inherit;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(255, 87, 34, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 87, 34, 0.4);
+}
+
+.btn-secondary {
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background: var(--surface);
+  border-color: var(--brand);
+  color: var(--brand);
+  box-shadow: var(--shadow);
+}
+
+/* ============================================
+   PROFILE RESPONSIVE — TABLET (768px – 991px)
+============================================ */
+@media (min-width: 768px) {
+  .profile-main {
+    padding: 32px 24px;
+  }
+
+  .profile-container h1 {
+    font-size: 2rem;
+  }
+
+  .profile-card {
+    padding: 32px;
+  }
+
+  .profile-stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .order-item {
+    padding: 16px;
+  }
+
+  .profile-actions {
+    gap: 16px;
+  }
+
+  .profile-actions .btn {
+    max-width: 220px;
+  }
+}
+
+/* ============================================
+   PROFILE RESPONSIVE — DESKTOP (>= 992px)
+============================================ */
+@media (min-width: 992px) {
+  .profile-main {
+    padding: 40px 32px;
+    min-height: calc(100vh - var(--navbar-h));
+    margin-bottom: 0;
+  }
+
+  .profile-container {
+    max-width: 900px;
+  }
+
+  .profile-container h1 {
+    font-size: 2.2rem;
+    margin-bottom: 32px;
+  }
+
+  .profile-card {
+    padding: 40px;
+  }
+
+  .profile-stats {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .profile-divider {
+    margin: 24px 0;
+  }
+
+  .recent-orders-list {
+    gap: 14px;
+  }
+
+  .order-item {
+    padding: 18px 20px;
+  }
+
+  .profile-actions {
+    justify-content: flex-end;
+    padding-top: 24px;
+  }
+
+  .profile-actions .btn {
+    max-width: 180px;
+    flex: 0 1 auto;
+  }
+}
+
+/* ============================================
+   DARK MODE — PROFILE
+============================================ */
+body.dark-mode .profile-card,
+body.dark .profile-card,
+body.dark-mode .auth-unlock-message,
+body.dark .auth-unlock-message {
+  background: #1f242f !important;
+  border-color: #2a2f3c !important;
+}
+
+body.dark-mode .profile-avatar .avatar-icon,
+body.dark .profile-avatar .avatar-icon {
+  background: linear-gradient(135deg, #ff6b35, #ff8a50) !important;
+  box-shadow: 0 8px 16px rgba(255, 107, 53, 0.4) !important;
+}
+
+body.dark-mode .profile-stats,
+body.dark .profile-stats {
+  background: rgba(255, 87, 34, 0.08) !important;
+}
+
+body.dark-mode .order-item,
+body.dark .order-item {
+  background: #161a24 !important;
+  border-color: #2a2f3c !important;
+}
+
+body.dark-mode .order-item:hover,
+body.dark .order-item:hover {
+  border-color: #ff6b35 !important;
+  background: #1a1f2a !important;
+}
+
+body.dark-mode .order-status.pending,
+body.dark .order-status.pending {
+  background: rgba(230, 81, 0, 0.2) !important;
+  color: #ffb74d !important;
+}
+
+body.dark-mode .order-status.confirmed,
+body.dark .order-status.confirmed {
+  background: rgba(21, 101, 192, 0.2) !important;
+  color: #64b5f6 !important;
+}
+
+body.dark-mode .order-status.delivered,
+body.dark .order-status.delivered {
+  background: rgba(46, 125, 50, 0.2) !important;
+  color: #81c784 !important;
+}
+
+body.dark-mode .order-status.cancelled,
+body.dark .order-status.cancelled {
+  background: rgba(198, 40, 40, 0.2) !important;
+  color: #ef5350 !important;
+}
+
+body.dark-mode .order-status.processing,
+body.dark .order-status.processing {
+  background: rgba(106, 27, 154, 0.2) !important;
+  color: #ba68c8 !important;
+}
+
+body.dark-mode .auth-unlock-message,
+body.dark .auth-unlock-message {
+  background: rgba(255, 87, 34, 0.15) !important;
+  border-color: rgba(255, 87, 34, 0.3) !important;
+}
+
+body.dark-mode .error-message,
+body.dark .error-message {
+  background: rgba(198, 40, 40, 0.2) !important;
+  border-color: rgba(198, 40, 40, 0.4) !important;
+}
+
+body.dark-mode .error-message p,
+body.dark .error-message p {
+  color: #ef5350 !important;
+}

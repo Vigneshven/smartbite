@@ -223,7 +223,7 @@ async function loadHealthScore(foodId) {
 
   try {
     const token = localStorage.getItem("token");
-    const response = await fetch(`${API_BASE_URL}/health/${foodId}`, {
+    const response = await fetch(`${API_BASE_URL}/api/health/${foodId}`, {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     });
 

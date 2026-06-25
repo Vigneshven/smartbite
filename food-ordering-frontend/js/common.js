@@ -63,6 +63,7 @@ function renderNavbar() {
             <p id="profileEmail"></p>
             <p id="profilePhone"></p>
           </div>
+          <button onclick="location.href='profile.html'">👤 My Profile</button>
           <button onclick="location.href='dashboard.html'">🏠 Dashboard</button>
           <button onclick="location.href='restaurants.html'">🍽 Restaurants</button>
           <button onclick="location.href='foods.html'">🍔 Menu</button>
@@ -314,6 +315,23 @@ function updateCartBadge(count) {
   }
 }
 
+// Update bottom navigation active state based on current page
+function updateBottomNavActive() {
+  const currentPage = window.location.pathname.split("/").pop() || "index.html";
+
+  // Remove active class from all nav items
+  const navItems = document.querySelectorAll(".bottom-nav .nav-item");
+  navItems.forEach((item) => item.classList.remove("active"));
+
+  // Add active class to the matching nav item
+  navItems.forEach((item) => {
+    const href = item.getAttribute("href");
+    if (href === currentPage || (currentPage === "" && href === "index.html")) {
+      item.classList.add("active");
+    }
+  });
+}
+
 async function initializeCommon() {
   const savedTheme = localStorage.getItem("theme");
   if (savedTheme === "dark") {
@@ -323,6 +341,7 @@ async function initializeCommon() {
   renderNavbar();
   updateDarkModeLabel();
   await updateNavbarState();
+  updateBottomNavActive();
   dispatchNavbarRendered();
 }
 
