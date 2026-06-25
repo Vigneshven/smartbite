@@ -12,12 +12,9 @@ async function loadFavorites() {
     return;
   }
 
-  const response = await fetch(
-    `http://localhost:8080/api/favorites/${userId}`,
-    {
-      headers: { Authorization: "Bearer " + token },
-    },
-  );
+  const response = await fetch(`${API_BASE_URL}/api/favorites/${userId}`, {
+    headers: { Authorization: "Bearer " + token },
+  });
 
   if (!response.ok) {
     favorites = [];
@@ -51,7 +48,7 @@ async function loadNavbarData() {
 
   try {
     const cartResponse = await fetch(
-      `http://localhost:8080/api/cart/user/${userId}`,
+      `${API_BASE_URL}/api/cart/user/${userId}`,
       {
         headers: { Authorization: "Bearer " + token },
       },
@@ -66,7 +63,7 @@ async function loadNavbarData() {
     }
 
     const favoriteResponse = await fetch(
-      `http://localhost:8080/api/favorites/${userId}`,
+      `${API_BASE_URL}/api/favorites/${userId}`,
       {
         headers: { Authorization: "Bearer " + token },
       },
@@ -217,15 +214,12 @@ async function loadRestaurantInfo() {
   try {
     const restaurantHeaders = token ? { Authorization: "Bearer " + token } : {};
     const [restaurantResponse, averageResponse] = await Promise.all([
-      fetch(`http://localhost:8080/api/restaurants/${restaurantId}`, {
+      fetch(`${API_BASE_URL}/api/restaurants/${restaurantId}`, {
         headers: restaurantHeaders,
       }),
-      fetch(
-        `http://localhost:8080/api/reviews/restaurant/${restaurantId}/average`,
-        {
-          headers: restaurantHeaders,
-        },
-      ),
+      fetch(`${API_BASE_URL}/api/reviews/restaurant/${restaurantId}/average`, {
+        headers: restaurantHeaders,
+      }),
     ]);
 
     const restaurant = await restaurantResponse.json();
@@ -278,7 +272,7 @@ async function loadReviews() {
   try {
     const reviewHeaders = token ? { Authorization: "Bearer " + token } : {};
     const response = await fetch(
-      `http://localhost:8080/api/reviews/restaurant/${restaurantId}`,
+      `${API_BASE_URL}/api/reviews/restaurant/${restaurantId}`,
       {
         headers: reviewHeaders,
       },
@@ -365,7 +359,7 @@ async function submitReview(event) {
   }
 
   try {
-    const response = await fetch("http://localhost:8080/api/reviews", {
+    const response = await fetch(`${API_BASE_URL}/api/reviews`, {
       method: "POST",
       headers: { Authorization: "Bearer " + token },
       body: formData,
@@ -404,7 +398,7 @@ async function loadFoods() {
   const headers = token ? { Authorization: "Bearer " + token } : {};
 
   const response = await fetch(
-    `http://localhost:8080/api/foods/restaurant/${restaurantId}`,
+    `${API_BASE_URL}/api/foods/restaurant/${restaurantId}`,
     {
       headers,
     },
@@ -433,7 +427,7 @@ async function addToCart(foodId) {
     return;
   }
 
-  const response = await fetch("http://localhost:8080/api/cart/add", {
+  const response = await fetch(`${API_BASE_URL}/api/cart/add`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -461,7 +455,7 @@ async function toggleFavorite(foodId) {
     return;
   }
 
-  const response = await fetch("http://localhost:8080/api/favorites/toggle", {
+  const response = await fetch(`${API_BASE_URL}/api/favorites/toggle`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

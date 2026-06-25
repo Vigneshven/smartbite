@@ -19,7 +19,7 @@ public class OrderDAO {
 
         public double getCartTotal(int userId) {
 
-                String sql = "SELECT NVL(SUM(f.PRICE * c.QUANTITY),0) " +
+                String sql = "SELECT IFNULL(SUM(f.PRICE * c.QUANTITY),0) " +
                                 "FROM CART c " +
                                 "JOIN FOODS f ON c.FOOD_ID = f.FOOD_ID " +
                                 "WHERE c.USER_ID = ?";
@@ -37,10 +37,10 @@ public class OrderDAO {
                         String deliveryAddress) {
 
                 String sql = "INSERT INTO ORDERS " +
-                                "(ORDER_ID, USER_ID, TOTAL_AMOUNT, STATUS, PAYMENT_METHOD, DELIVERY_ADDRESS, ORDER_DATE) "
+                                "(USER_ID, TOTAL_AMOUNT, STATUS, PAYMENT_METHOD, DELIVERY_ADDRESS, ORDER_DATE) "
                                 +
                                 "VALUES " +
-                                "(ORDERS_SEQ.NEXTVAL, ?, ?, ?, ?, ?, SYSDATE)";
+                                "(?, ?, ?, ?, ?, NOW())";
 
                 return jdbcTemplate.update(
                                 sql,
@@ -70,17 +70,16 @@ public class OrderDAO {
                         int userId) {
 
                 String sql = "INSERT INTO ORDER_ITEMS " +
-                                "(ITEM_ID, ORDER_ID, RESTAURANT_ID, FOOD_ID, QUANTITY, PRICE) " +
+                                "(ORDER_ID, RESTAURANT_ID, FOOD_ID, QUANTITY, PRICE) " +
                                 "SELECT " +
-                                "ORDER_ITEMS_SEQ.NEXTVAL, " +
                                 "?, " +
                                 "f.RESTAURANT_ID, " +
                                 "c.FOOD_ID, " +
                                 "c.QUANTITY, " +
                                 "f.PRICE " +
-                                "FROM CART c, FOODS f " +
-                                "WHERE c.FOOD_ID = f.FOOD_ID " +
-                                "AND c.USER_ID = ?";
+                                "FROM CART c " +
+                                "JOIN FOODS f ON c.FOOD_ID = f.FOOD_ID " +
+                                "WHERE c.USER_ID = ?";
 
                 return jdbcTemplate.update(
                                 sql,
@@ -193,12 +192,12 @@ public class OrderDAO {
         }
 
         public WeeklySpending getWeeklySpending(int userId) {
-                String sql = "SELECT NVL(SUM(TOTAL_AMOUNT),0) AS TOTAL_SPENT, " +
+                String sql = "SELECT IFNULL(SUM(TOTAL_AMOUNT),0) AS TOTAL_SPENT, " +
                                 "COUNT(*) AS ORDER_COUNT, " +
-                                "NVL(ROUND(AVG(TOTAL_AMOUNT),2),0) AS AVG_ORDER " +
+                                "IFNULL(ROUND(AVG(TOTAL_AMOUNT),2),0) AS AVG_ORDER " +
                                 "FROM ORDERS " +
                                 "WHERE USER_ID = ? " +
-                                "AND ORDER_DATE >= SYSDATE - 7";
+                                "AND ORDER_DATE >= NOW() - INTERVAL 7 DAY";
 
                 return jdbcTemplate.queryForObject(
                                 sql,
@@ -213,15 +212,15 @@ public class OrderDAO {
         }
 
         public TopRestaurantResponse getTopRestaurant(int userId) {
-                String sql = "SELECT * FROM (" +
-                                "SELECT r.RESTAURANT_NAME, r.ADDRESS, NVL(r.RATING,0) AS RATING, COUNT(*) AS ORDER_COUNT "
+                String sql = "SELECT r.RESTAURANT_NAME, r.ADDRESS, IFNULL(r.RATING,0) AS RATING, COUNT(*) AS ORDER_COUNT "
                                 +
                                 "FROM ORDERS o " +
                                 "JOIN ORDER_ITEMS oi ON o.ORDER_ID = oi.ORDER_ID " +
                                 "JOIN RESTAURANTS r ON oi.RESTAURANT_ID = r.RESTAURANT_ID " +
                                 "WHERE o.USER_ID = ? " +
                                 "GROUP BY r.RESTAURANT_NAME, r.ADDRESS, r.RATING " +
-                                "ORDER BY COUNT(*) DESC) WHERE ROWNUM = 1";
+                                "ORDER BY ORDER_COUNT DESC " +
+                                "LIMIT 1";
 
                 List<TopRestaurantResponse> results = jdbcTemplate.query(
                                 sql,
@@ -244,7 +243,7 @@ public class OrderDAO {
                                 "JOIN FOODS f ON oi.FOOD_ID = f.FOOD_ID " +
                                 "JOIN RESTAURANTS r ON oi.RESTAURANT_ID = r.RESTAURANT_ID " +
                                 "WHERE oi.ORDER_ID = (SELECT MAX(ORDER_ID) FROM ORDERS WHERE USER_ID = ?) " +
-                                "AND ROWNUM <= 6";
+                                "LIMIT 6";
 
                 return jdbcTemplate.query(
                                 sql,

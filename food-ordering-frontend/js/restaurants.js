@@ -5,7 +5,7 @@ async function loadRestaurants() {
 
   const headers = token ? { Authorization: "Bearer " + token } : {};
 
-  const response = await fetch("http://localhost:8080/api/restaurants", {
+  const response = await fetch(`${API_BASE_URL}/api/restaurants`, {
     headers,
   });
 
@@ -94,7 +94,7 @@ async function loadNavbarData() {
 
   try {
     const cartResponse = await fetch(
-      `http://localhost:8080/api/cart/user/${userId}`,
+      `${API_BASE_URL}/api/cart/user/${userId}`,
       {
         headers: { Authorization: "Bearer " + token },
       },
@@ -109,7 +109,7 @@ async function loadNavbarData() {
     }
 
     const favoriteResponse = await fetch(
-      `http://localhost:8080/api/favorites/${userId}`,
+      `${API_BASE_URL}/api/favorites/${userId}`,
       {
         headers: { Authorization: "Bearer " + token },
       },

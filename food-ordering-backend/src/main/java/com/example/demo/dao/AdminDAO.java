@@ -34,19 +34,18 @@ public class AdminDAO {
     }
 
     public double totalRevenue() {
-        String sql = "SELECT NVL(SUM(TOTAL_AMOUNT), 0) FROM ORDERS";
+        String sql = "SELECT IFNULL(SUM(TOTAL_AMOUNT), 0) FROM ORDERS";
         return jdbcTemplate.queryForObject(sql, Double.class);
     }
 
     public List<TopSellingFood> findTopSellingFoods(int limit) {
-        String sql = "SELECT * FROM (" +
-                "SELECT f.FOOD_ID, f.FOOD_NAME, r.RESTAURANT_NAME, SUM(oi.QUANTITY) AS SALES_COUNT " +
+        String sql = "SELECT f.FOOD_ID, f.FOOD_NAME, r.RESTAURANT_NAME, SUM(oi.QUANTITY) AS SALES_COUNT " +
                 "FROM ORDER_ITEMS oi " +
                 "JOIN FOODS f ON oi.FOOD_ID = f.FOOD_ID " +
                 "JOIN RESTAURANTS r ON f.RESTAURANT_ID = r.RESTAURANT_ID " +
                 "GROUP BY f.FOOD_ID, f.FOOD_NAME, r.RESTAURANT_NAME " +
-                "ORDER BY SALES_COUNT DESC" +
-                ") WHERE ROWNUM <= ?";
+                "ORDER BY SALES_COUNT DESC " +
+                "LIMIT ?";
 
         return jdbcTemplate.query(
                 sql,

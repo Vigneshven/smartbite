@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:8080/api";
+const BASE_URL = `${API_BASE_URL}/api`;
 
 let quantity = 1;
 let favorites = [];
@@ -31,10 +31,10 @@ async function loadNavbarData() {
 
   try {
     const [cartResponse, favoriteResponse] = await Promise.all([
-      fetch(`http://localhost:8080/api/cart/user/${userId}`, {
+      fetch(`${API_BASE_URL}/api/cart/user/${userId}`, {
         headers: { Authorization: "Bearer " + token },
       }),
-      fetch(`http://localhost:8080/api/favorites/${userId}`, {
+      fetch(`${API_BASE_URL}/api/favorites/${userId}`, {
         headers: { Authorization: "Bearer " + token },
       }),
     ]);
@@ -69,14 +69,11 @@ async function loadFavorites() {
   }
 
   try {
-    const response = await fetch(
-      `http://localhost:8080/api/favorites/${userId}`,
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
+    const response = await fetch(`${API_BASE_URL}/api/favorites/${userId}`, {
+      headers: {
+        Authorization: "Bearer " + token,
       },
-    );
+    });
     favorites = response.ok ? await response.json() : [];
   } catch (error) {
     favorites = [];
@@ -88,7 +85,7 @@ async function loadFood() {
   const foodId = localStorage.getItem("foodId");
   const token = localStorage.getItem("token");
 
-  const response = await fetch(`http://localhost:8080/api/foods/${foodId}`, {
+  const response = await fetch(`${API_BASE_URL}/api/foods/${foodId}`, {
     headers: token ? { Authorization: `Bearer ${token}` } : {},
   });
 
@@ -261,7 +258,7 @@ async function addToCart(foodId) {
     return;
   }
 
-  const response = await fetch("http://localhost:8080/api/cart/add", {
+  const response = await fetch(`${API_BASE_URL}/api/cart/add`, {
     method: "POST",
 
     headers: {
@@ -295,7 +292,7 @@ async function toggleFavorite(foodId) {
   const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
 
-  await fetch("http://localhost:8080/api/favorites/toggle", {
+  await fetch(`${API_BASE_URL}/api/favorites/toggle`, {
     method: "POST",
 
     headers: {

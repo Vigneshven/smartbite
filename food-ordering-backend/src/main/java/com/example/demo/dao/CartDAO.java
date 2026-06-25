@@ -45,8 +45,8 @@ public class CartDAO {
                 }
 
                 String insertSql = "INSERT INTO CART " +
-                                "(CART_ID, USER_ID, FOOD_ID, QUANTITY) " +
-                                "VALUES(CART_SEQ.NEXTVAL, ?, ?, ?)";
+                                "(USER_ID, FOOD_ID, QUANTITY) " +
+                                "VALUES(?, ?, ?)";
 
                 return jdbcTemplate.update(
 

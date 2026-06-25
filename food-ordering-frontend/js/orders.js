@@ -18,7 +18,7 @@ async function loadNavbarData() {
 
   try {
     const cartResponse = await fetch(
-      `http://localhost:8080/api/cart/user/${userId}`,
+      `${API_BASE_URL}/api/cart/user/${userId}`,
       {
         headers: { Authorization: "Bearer " + token },
       },
@@ -121,12 +121,9 @@ async function loadOrders() {
   }
 
   try {
-    const response = await fetch(
-      `http://localhost:8080/api/orders/user/${userId}`,
-      {
-        headers: { Authorization: "Bearer " + token },
-      },
-    );
+    const response = await fetch(`${API_BASE_URL}/api/orders/user/${userId}`, {
+      headers: { Authorization: "Bearer " + token },
+    });
 
     const orders = response.ok ? await response.json() : [];
     allOrders = orders;

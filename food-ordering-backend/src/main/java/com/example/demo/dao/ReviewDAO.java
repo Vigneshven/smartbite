@@ -23,8 +23,8 @@ public class ReviewDAO {
         public int addReview(Review review) {
 
                 String sql = "INSERT INTO REVIEWS " +
-                                "(REVIEW_ID, USER_ID, RESTAURANT_ID, RATING, REVIEW_TEXT, PHOTO_URL) " +
-                                "VALUES (REVIEWS_SEQ.NEXTVAL, ?, ?, ?, ?, ?)";
+                                "(USER_ID, RESTAURANT_ID, RATING, REVIEW_TEXT, PHOTO_URL) " +
+                                "VALUES (?, ?, ?, ?, ?)";
 
                 return jdbcTemplate.update(
                                 sql,

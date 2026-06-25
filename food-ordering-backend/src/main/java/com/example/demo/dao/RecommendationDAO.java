@@ -15,15 +15,14 @@ public class RecommendationDAO {
 
         public String getFavoriteCategory(int userId) {
 
-                String sql = "SELECT CATEGORY FROM (" +
-                                " SELECT f.CATEGORY, COUNT(*) TOTAL " +
-                                " FROM ORDER_ITEMS oi " +
-                                " JOIN FOODS f ON oi.FOOD_ID = f.FOOD_ID " +
-                                " JOIN ORDERS o ON oi.ORDER_ID = o.ORDER_ID " +
-                                " WHERE o.USER_ID = ? " +
-                                " GROUP BY f.CATEGORY " +
-                                " ORDER BY TOTAL DESC" +
-                                ") WHERE ROWNUM = 1";
+                String sql = "SELECT CATEGORY " +
+                                "FROM ORDER_ITEMS oi " +
+                                "JOIN FOODS f ON oi.FOOD_ID = f.FOOD_ID " +
+                                "JOIN ORDERS o ON oi.ORDER_ID = o.ORDER_ID " +
+                                "WHERE o.USER_ID = ? " +
+                                "GROUP BY f.CATEGORY " +
+                                "ORDER BY COUNT(*) DESC " +
+                                "LIMIT 1";
 
                 List<String> categories = jdbcTemplate.query(
                                 sql,
@@ -53,7 +52,7 @@ public class RecommendationDAO {
                                 " WHERE o.USER_ID = ? " +
                                 " AND oi.FOOD_ID = f.FOOD_ID" +
                                 ") " +
-                                "AND ROWNUM <= 5";
+                                "LIMIT 5";
 
                 List<Recommendation> recommendations = jdbcTemplate.query(
                                 sql,
@@ -83,7 +82,7 @@ public class RecommendationDAO {
                                 +
                                 "FROM FOODS f " +
                                 "LEFT JOIN RESTAURANTS r ON f.RESTAURANT_ID = r.RESTAURANT_ID " +
-                                "WHERE ROWNUM <= 5";
+                                "LIMIT 5";
 
                 return jdbcTemplate.query(
                                 sql,

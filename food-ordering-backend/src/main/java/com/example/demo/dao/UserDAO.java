@@ -8,88 +8,83 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class UserDAO {
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
+        @Autowired
+        JdbcTemplate jdbcTemplate;
 
-    public int registerUser(User user) {
+        public int registerUser(User user) {
 
-    String sql =
-            "INSERT INTO USERS " +
-            "(USER_ID, FULL_NAME, EMAIL, PASSWORD, PHONE, ROLE) " +
-            "VALUES " +
-            "(USERS_SEQ.NEXTVAL, ?, ?, ?, ?, ?)";
+                String sql = "INSERT INTO USERS " +
+                                "(FULL_NAME, EMAIL, PASSWORD, PHONE, ROLE) " +
+                                "VALUES " +
+                                "(?, ?, ?, ?, ?)";
 
+                return jdbcTemplate.update(
+                                sql,
+                                user.getFullName(),
+                                user.getEmail(),
+                                user.getPassword(),
+                                user.getPhone(),
+                                user.getRole());
+        }
 
-    return jdbcTemplate.update(
-            sql,
-            user.getFullName(),
-            user.getEmail(),
-            user.getPassword(),
-            user.getPhone(),
-            user.getRole()
-    );
-   }
+        public User findByEmail(String email) {
 
-   public User findByEmail(String email) {
+                String sql = "SELECT * FROM USERS " +
+                                "WHERE EMAIL = ?";
 
-    String sql =
-            "SELECT * FROM USERS " +
-            "WHERE EMAIL = ?";
+                try {
 
-    try {
+                        return jdbcTemplate.queryForObject(
+                                        sql,
+                                        new Object[] { email },
+                                        (rs, rowNum) -> {
 
-        return jdbcTemplate.queryForObject(
-                sql,
-                new Object[]{email},
-                (rs, rowNum) -> {
+                                                User user = new User();
 
-                    User user = new User();
+                                                user.setUserId(
+                                                                rs.getInt("USER_ID"));
 
-                    user.setUserId(
-                            rs.getInt("USER_ID"));
+                                                user.setFullName(
+                                                                rs.getString("FULL_NAME"));
 
-                    user.setFullName(
-                            rs.getString("FULL_NAME"));
+                                                user.setEmail(
+                                                                rs.getString("EMAIL"));
 
-                    user.setEmail(
-                            rs.getString("EMAIL"));
+                                                user.setPassword(
+                                                                rs.getString("PASSWORD"));
 
-                    user.setPassword(
-                            rs.getString("PASSWORD"));
+                                                user.setPhone(
+                                                                rs.getString("PHONE"));
 
-                    user.setPhone(
-                            rs.getString("PHONE"));
+                                                user.setRole(
+                                                                rs.getString("ROLE"));
 
-                    user.setRole(
-                           rs.getString("ROLE"));
+                                                return user;
+                                        });
 
-                    return user;
-                });
+                } catch (Exception e) {
+                        return null;
+                }
+        }
 
-    } catch(Exception e) {
-        return null;
-    }
-  }
+        public User getUserById(int userId) {
 
-  public User getUserById(int userId) {
+                String sql = "SELECT * FROM USERS WHERE USER_ID = ?";
 
-    String sql =
-        "SELECT * FROM USERS WHERE USER_ID = ?";
+                return jdbcTemplate.queryForObject(
+                                sql,
+                                new Object[] { userId },
+                                (rs, rowNum) -> {
 
-    return jdbcTemplate.queryForObject(
-        sql,
-        new Object[]{userId},
-        (rs, rowNum) -> {
+                                        User user = new User();
 
-            User user = new User();
+                                        user.setUserId(rs.getInt("USER_ID"));
+                                        user.setFullName(rs.getString("FULL_NAME"));
+                                        user.setEmail(rs.getString("EMAIL"));
+                                        user.setPhone(rs.getString("PHONE"));
+                                        user.setRole(rs.getString("ROLE"));
 
-            user.setUserId(rs.getInt("USER_ID"));
-            user.setFullName(rs.getString("FULL_NAME"));
-            user.setEmail(rs.getString("EMAIL"));
-            user.setPhone(rs.getString("PHONE"));
-            user.setRole(rs.getString("ROLE"));
-
-            return user;
-        });
-   }
+                                        return user;
+                                });
+        }
 }

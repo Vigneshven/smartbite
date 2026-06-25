@@ -85,14 +85,11 @@ async function loadFavorites() {
   const userId = localStorage.getItem("userId");
 
   try {
-    const response = await fetch(
-      `http://localhost:8080/api/favorites/${userId}`,
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
+    const response = await fetch(`${API_BASE_URL}/api/favorites/${userId}`, {
+      headers: {
+        Authorization: "Bearer " + token,
       },
-    );
+    });
     if (!response.ok) {
       favorites = [];
       return;
@@ -109,7 +106,7 @@ async function loadTrendingFoods() {
   const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
   try {
-    const response = await fetch("http://localhost:8080/api/trending", {
+    const response = await fetch(`${API_BASE_URL}/api/trending`, {
       headers,
     });
 
@@ -137,7 +134,7 @@ async function loadRecommendations() {
 
   try {
     const response = await fetch(
-      `http://localhost:8080/api/recommendations/${userId}`,
+      `${API_BASE_URL}/api/recommendations/${userId}`,
       {
         headers: {
           Authorization: "Bearer " + token,
@@ -181,7 +178,7 @@ async function loadWishlistRecommendations() {
 
   try {
     const response = await fetch(
-      `http://localhost:8080/api/wishlist/recommendations/${userId}`,
+      `${API_BASE_URL}/api/wishlist/recommendations/${userId}`,
       {
         headers: {
           Authorization: "Bearer " + token,
@@ -223,14 +220,11 @@ async function loadOrderAgain() {
   const userId = localStorage.getItem("userId");
 
   try {
-    const response = await fetch(
-      `http://localhost:8080/api/reorder/${userId}`,
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
+    const response = await fetch(`${API_BASE_URL}/api/reorder/${userId}`, {
+      headers: {
+        Authorization: "Bearer " + token,
       },
-    );
+    });
 
     if (response.ok) {
       const foods = await response.json();
@@ -258,7 +252,7 @@ async function loadCategoryBased() {
 
   try {
     const response = await fetch(
-      "http://localhost:8080/api/foods/category/South%20Indian",
+      `${API_BASE_URL}/api/foods/category/South%20Indian`,
       {
         headers,
       },
@@ -295,7 +289,7 @@ async function loadWeeklySpending() {
 
   try {
     const response = await fetch(
-      `http://localhost:8080/api/orders/weekly-spending/${userId}`,
+      `${API_BASE_URL}/api/orders/weekly-spending/${userId}`,
       {
         headers: {
           Authorization: "Bearer " + token,
@@ -326,7 +320,7 @@ async function loadTopRestaurant() {
 
   try {
     const response = await fetch(
-      `http://localhost:8080/api/orders/top-restaurant/${userId}`,
+      `${API_BASE_URL}/api/orders/top-restaurant/${userId}`,
       {
         headers: {
           Authorization: "Bearer " + token,
@@ -416,7 +410,7 @@ async function toggleFavorite(foodId) {
   }
 
   try {
-    await fetch("http://localhost:8080/api/favorites/toggle", {
+    await fetch(`${API_BASE_URL}/api/favorites/toggle`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -466,10 +460,10 @@ async function loadNavbarData() {
 
   try {
     const [cartResponse, favoriteResponse] = await Promise.all([
-      fetch(`http://localhost:8080/api/cart/user/${userId}`, {
+      fetch(`${API_BASE_URL}/api/cart/user/${userId}`, {
         headers: { Authorization: "Bearer " + token },
       }),
-      fetch(`http://localhost:8080/api/favorites/${userId}`, {
+      fetch(`${API_BASE_URL}/api/favorites/${userId}`, {
         headers: { Authorization: "Bearer " + token },
       }),
     ]);

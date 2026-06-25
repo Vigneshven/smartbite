@@ -44,7 +44,7 @@ async function loadOrderDetails() {
 
   try {
     const response = await fetch(
-      `http://localhost:8080/api/orders/details/${orderId}`,
+      `${API_BASE_URL}/api/orders/details/${orderId}`,
       {
         headers: {
           Authorization: "Bearer " + token,
@@ -74,7 +74,7 @@ async function getOrderStatus() {
 
   try {
     const response = await fetch(
-      `http://localhost:8080/api/orders/status/${orderId}`,
+      `${API_BASE_URL}/api/orders/status/${orderId}`,
       {
         headers: {
           Authorization: "Bearer " + token,

@@ -22,10 +22,10 @@ async function loadNavbarData() {
 
   try {
     const [favResponse, cartResponse] = await Promise.all([
-      fetch(`http://localhost:8080/api/favorites/${userId}`, {
+      fetch(`${API_BASE_URL}/api/favorites/${userId}`, {
         headers: { Authorization: "Bearer " + token },
       }),
-      fetch(`http://localhost:8080/api/cart/user/${userId}`, {
+      fetch(`${API_BASE_URL}/api/cart/user/${userId}`, {
         headers: { Authorization: "Bearer " + token },
       }),
     ]);
@@ -133,14 +133,11 @@ async function loadFavoritesPage() {
   }
 
   try {
-    const response = await fetch(
-      `http://localhost:8080/api/favorites/${userId}`,
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
+    const response = await fetch(`${API_BASE_URL}/api/favorites/${userId}`, {
+      headers: {
+        Authorization: "Bearer " + token,
       },
-    );
+    });
     const foods = response.ok ? await response.json() : [];
     allFavorites = foods;
     renderFavorites(foods);
@@ -160,7 +157,7 @@ async function removeFavorite(foodId) {
   }
 
   const response = await fetch(
-    `http://localhost:8080/api/favorites/remove?userId=${userId}&foodId=${foodId}`,
+    `${API_BASE_URL}/api/favorites/remove?userId=${userId}&foodId=${foodId}`,
     {
       method: "DELETE",
       headers: {
@@ -190,7 +187,7 @@ async function addToCart(foodId) {
     return;
   }
 
-  const response = await fetch("http://localhost:8080/api/cart/add", {
+  const response = await fetch(`${API_BASE_URL}/api/cart/add`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

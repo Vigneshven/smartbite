@@ -17,7 +17,7 @@ async function updateNavbar() {
 
   if (cartBadge) {
     const cartResponse = await fetch(
-      `http://localhost:8080/api/cart/user/${userId}`,
+      `${API_BASE_URL}/api/cart/user/${userId}`,
 
       {
         headers: {
@@ -37,7 +37,7 @@ async function updateNavbar() {
 
   if (wishlistBadge) {
     const favResponse = await fetch(
-      `http://localhost:8080/api/favorites/${userId}`,
+      `${API_BASE_URL}/api/favorites/${userId}`,
 
       {
         headers: {

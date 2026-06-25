@@ -37,10 +37,10 @@ async function loadNavbarData() {
 
   try {
     const [favoriteResponse, cartResponse] = await Promise.all([
-      fetch(`http://localhost:8080/api/favorites/${userId}`, {
+      fetch(`${API_BASE_URL}/api/favorites/${userId}`, {
         headers: { Authorization: "Bearer " + token },
       }),
-      fetch(`http://localhost:8080/api/cart/user/${userId}`, {
+      fetch(`${API_BASE_URL}/api/cart/user/${userId}`, {
         headers: { Authorization: "Bearer " + token },
       }),
     ]);
@@ -318,14 +318,11 @@ async function loadCart() {
   }
 
   try {
-    const response = await fetch(
-      `http://localhost:8080/api/cart/user/${userId}`,
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
+    const response = await fetch(`${API_BASE_URL}/api/cart/user/${userId}`, {
+      headers: {
+        Authorization: "Bearer " + token,
       },
-    );
+    });
 
     const items = response.ok ? await response.json() : [];
     allCartItems = items || [];
@@ -345,7 +342,7 @@ async function removeItem(cartId) {
     return;
   }
 
-  await fetch(`http://localhost:8080/api/cart/${cartId}`, {
+  await fetch(`${API_BASE_URL}/api/cart/${cartId}`, {
     method: "DELETE",
     headers: {
       Authorization: "Bearer " + token,
@@ -397,7 +394,7 @@ async function placeOrder() {
   }
 
   const response = await fetch(
-    "http://localhost:8080/api/orders/place",
+    `${API_BASE_URL}/api/orders/place`,
 
     {
       method: "POST",
@@ -464,7 +461,7 @@ async function updateQty(cartId, quantity) {
     return;
   }
 
-  const response = await fetch("http://localhost:8080/api/cart/update", {
+  const response = await fetch(`${API_BASE_URL}/api/cart/update`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -496,7 +493,7 @@ async function addToCart(foodId) {
     return;
   }
 
-  const response = await fetch("http://localhost:8080/api/cart/add", {
+  const response = await fetch(`${API_BASE_URL}/api/cart/add`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

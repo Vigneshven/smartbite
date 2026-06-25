@@ -16,9 +16,9 @@ public class FavoriteDAO {
     public int addFavorite(Favorite favorite) {
 
         String sql = "INSERT INTO FAVORITES " +
-                "(FAVORITE_ID, USER_ID, FOOD_ID) " +
+                "(USER_ID, FOOD_ID) " +
                 "VALUES " +
-                "(FAVORITES_SEQ.NEXTVAL, ?, ?)";
+                "(?, ?)";
 
         return jdbcTemplate.update(
                 sql,
@@ -59,14 +59,13 @@ public class FavoriteDAO {
     }
 
     public List<Food> getWishlistRecommendations(int userId) {
-        String categorySql = "SELECT CATEGORY FROM (" +
-                " SELECT f.CATEGORY, COUNT(*) TOTAL " +
-                " FROM FAVORITES fav " +
-                " JOIN FOODS f ON fav.FOOD_ID = f.FOOD_ID " +
-                " WHERE fav.USER_ID = ? " +
-                " GROUP BY f.CATEGORY " +
-                " ORDER BY TOTAL DESC" +
-                ") WHERE ROWNUM = 1";
+        String categorySql = "SELECT CATEGORY " +
+                "FROM FAVORITES fav " +
+                "JOIN FOODS f ON fav.FOOD_ID = f.FOOD_ID " +
+                "WHERE fav.USER_ID = ? " +
+                "GROUP BY f.CATEGORY " +
+                "ORDER BY COUNT(*) DESC " +
+                "LIMIT 1";
 
         List<String> categories = jdbcTemplate.query(
                 categorySql,
@@ -84,7 +83,7 @@ public class FavoriteDAO {
                 "JOIN RESTAURANTS r ON f.RESTAURANT_ID = r.RESTAURANT_ID " +
                 "WHERE LOWER(f.CATEGORY) = LOWER(?) " +
                 "AND f.FOOD_ID NOT IN (SELECT FOOD_ID FROM FAVORITES WHERE USER_ID = ?) " +
-                "AND ROWNUM <= 6";
+                "LIMIT 6";
 
         return jdbcTemplate.query(
                 sql,
@@ -129,12 +128,12 @@ public class FavoriteDAO {
 
     public List<Food> getMostLikedFoods() {
 
-        String sql = "SELECT * FROM (" +
-                "SELECT f.FOOD_ID, f.FOOD_NAME, f.PRICE, f.IMAGE_URL, COUNT(fav.FOOD_ID) AS LIKE_COUNT " +
+        String sql = "SELECT f.FOOD_ID, f.FOOD_NAME, f.PRICE, f.IMAGE_URL, COUNT(fav.FOOD_ID) AS LIKE_COUNT " +
                 "FROM FOODS f " +
                 "LEFT JOIN FAVORITES fav ON f.FOOD_ID = fav.FOOD_ID " +
                 "GROUP BY f.FOOD_ID, f.FOOD_NAME, f.PRICE, f.IMAGE_URL " +
-                "ORDER BY LIKE_COUNT DESC) WHERE ROWNUM <= 5";
+                "ORDER BY LIKE_COUNT DESC " +
+                "LIMIT 5";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Food food = new Food();

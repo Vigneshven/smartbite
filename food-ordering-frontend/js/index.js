@@ -1,5 +1,5 @@
 // API Configuration
-const API_BASE_URL = "http://localhost:8080/api";
+const BASE_URL = `${API_BASE_URL}/api`;
 
 // Helper function to get authorization headers
 function getAuthHeaders() {
@@ -18,7 +18,7 @@ function getAuthHeaders() {
 // 1. RESTAURANT ENDPOINTS
 async function getAllRestaurants() {
   try {
-    const response = await fetch(`${API_BASE_URL}/restaurants`, {
+    const response = await fetch(`${BASE_URL}/restaurants`, {
       method: "GET",
       headers: getAuthHeaders(),
     });
@@ -32,7 +32,7 @@ async function getAllRestaurants() {
 
 async function getRestaurantById(id) {
   try {
-    const response = await fetch(`${API_BASE_URL}/restaurants/${id}`, {
+    const response = await fetch(`${BASE_URL}/restaurants/${id}`, {
       method: "GET",
       headers: getAuthHeaders(),
     });
@@ -47,7 +47,7 @@ async function getRestaurantById(id) {
 async function searchRestaurants(keyword) {
   try {
     const response = await fetch(
-      `${API_BASE_URL}/restaurants/search?keyword=${encodeURIComponent(keyword)}`,
+      `${BASE_URL}/restaurants/search?keyword=${encodeURIComponent(keyword)}`,
       {
         method: "GET",
         headers: getAuthHeaders(),
@@ -65,7 +65,7 @@ async function searchRestaurants(keyword) {
 async function getFoodsByRestaurant(restaurantId) {
   try {
     const response = await fetch(
-      `${API_BASE_URL}/foods/restaurant/${restaurantId}`,
+      `${BASE_URL}/foods/restaurant/${restaurantId}`,
       {
         method: "GET",
         headers: getAuthHeaders(),
@@ -82,7 +82,7 @@ async function getFoodsByRestaurant(restaurantId) {
 async function searchFoods(keyword) {
   try {
     const response = await fetch(
-      `${API_BASE_URL}/foods/search?keyword=${encodeURIComponent(keyword)}`,
+      `${BASE_URL}/foods/search?keyword=${encodeURIComponent(keyword)}`,
       {
         method: "GET",
         headers: getAuthHeaders(),
@@ -98,7 +98,7 @@ async function searchFoods(keyword) {
 
 async function getTrendingFoods() {
   try {
-    const response = await fetch(`${API_BASE_URL}/foods/trending`, {
+    const response = await fetch(`${BASE_URL}/foods/trending`, {
       method: "GET",
       headers: getAuthHeaders(),
     });
@@ -113,7 +113,7 @@ async function getTrendingFoods() {
 async function getFoodsByCategory(category) {
   try {
     const response = await fetch(
-      `${API_BASE_URL}/foods/category/${encodeURIComponent(category)}`,
+      `${BASE_URL}/foods/category/${encodeURIComponent(category)}`,
       {
         method: "GET",
         headers: getAuthHeaders(),
@@ -129,7 +129,7 @@ async function getFoodsByCategory(category) {
 
 async function filterFoods(category, maxPrice, minCalories, maxCalories) {
   try {
-    let url = `${API_BASE_URL}/foods/filter?`;
+    let url = `${BASE_URL}/foods/filter?`;
     const params = [];
     if (category) params.push(`category=${encodeURIComponent(category)}`);
     if (maxPrice) params.push(`maxPrice=${maxPrice}`);
@@ -151,7 +151,7 @@ async function filterFoods(category, maxPrice, minCalories, maxCalories) {
 
 async function getFoodById(foodId) {
   try {
-    const response = await fetch(`${API_BASE_URL}/foods/${foodId}`, {
+    const response = await fetch(`${BASE_URL}/foods/${foodId}`, {
       method: "GET",
       headers: getAuthHeaders(),
     });
@@ -203,7 +203,7 @@ async function findBudgetMeals() {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/budget/${amount}`, {
+    const response = await fetch(`${BASE_URL}/budget/${amount}`, {
       method: "GET",
       headers: getAuthHeaders(),
     });

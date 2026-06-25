@@ -15,7 +15,7 @@ async function placeOrder() {
   const deliveryAddress = document.getElementById("address").value;
 
   const response = await fetch(
-    "http://localhost:8080/api/orders/place",
+    `${API_BASE_URL}/api/orders/place`,
 
     {
       method: "POST",

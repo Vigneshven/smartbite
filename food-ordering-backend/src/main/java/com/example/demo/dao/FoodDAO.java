@@ -165,15 +165,15 @@ public class FoodDAO {
 
         public List<Food> getMostLikedFoods() {
 
-                String sql = "SELECT * FROM (" +
-                                "SELECT f.FOOD_ID, f.FOOD_NAME, f.CATEGORY, f.PRICE, f.INGREDIENTS, r.RESTAURANT_NAME, COUNT(fav.FOOD_ID) AS LIKE_COUNT "
+                String sql = "SELECT f.FOOD_ID, f.FOOD_NAME, f.CATEGORY, f.PRICE, f.INGREDIENTS, r.RESTAURANT_NAME, COUNT(fav.FOOD_ID) AS LIKE_COUNT "
                                 +
                                 "FROM FOODS f " +
                                 "LEFT JOIN RESTAURANTS r ON f.RESTAURANT_ID = r.RESTAURANT_ID " +
                                 "LEFT JOIN FAVORITES fav ON f.FOOD_ID = fav.FOOD_ID " +
                                 "GROUP BY f.FOOD_ID, f.FOOD_NAME, f.CATEGORY, f.PRICE, f.INGREDIENTS, r.RESTAURANT_NAME "
                                 +
-                                "ORDER BY LIKE_COUNT DESC) WHERE ROWNUM <= 5";
+                                "ORDER BY LIKE_COUNT DESC " +
+                                "LIMIT 5";
 
                 return jdbcTemplate.query(sql, (rs, rowNum) -> {
 
@@ -223,7 +223,8 @@ public class FoodDAO {
                                 +
                                 "FROM FOODS f " +
                                 "LEFT JOIN RESTAURANTS r ON f.RESTAURANT_ID = r.RESTAURANT_ID " +
-                                "WHERE LOWER(f.CATEGORY) = LOWER(?) AND ROWNUM <= 12";
+                                "WHERE LOWER(f.CATEGORY) = LOWER(?) " +
+                                "LIMIT 12";
 
                 return jdbcTemplate.query(
                                 sql,
