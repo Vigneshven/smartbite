@@ -8,9 +8,12 @@ import com.example.demo.model.LoginRequest;
 import com.example.demo.model.LoginResponse;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.example.demo.security.JwtUtil;
+import java.util.logging.Logger;
 
 @Service
 public class UserService {
+
+        private static final Logger logger = Logger.getLogger(UserService.class.getName());
 
         @Autowired
         UserDAO userDAO;
@@ -22,7 +25,7 @@ public class UserService {
         JwtUtil jwtUtil;
 
         public int register(User user) {
-
+                logger.info("[UserService] Registering user: " + user.getEmail());
                 user.setPassword(
                                 passwordEncoder.encode(
                                                 user.getPassword()));
@@ -33,11 +36,13 @@ public class UserService {
         }
 
         public LoginResponse login(LoginRequest request) {
+                logger.info("[UserService] Login attempt for: " + request.getEmail());
 
                 User user = userDAO.findByEmail(
                                 request.getEmail());
 
                 if (user == null) {
+                        logger.warning("[UserService] Login failed: user not found - " + request.getEmail());
                         return null;
                 }
 
@@ -46,6 +51,7 @@ public class UserService {
                                 user.getPassword());
 
                 if (matched) {
+                        logger.info("[UserService] Login successful for: " + request.getEmail());
 
                         LoginResponse response = new LoginResponse();
 
@@ -69,10 +75,28 @@ public class UserService {
                         return response;
                 }
 
+                logger.warning("[UserService] Login failed: password mismatch - " + request.getEmail());
                 return null;
         }
 
         public User getUserById(int userId) {
+                logger.info("[UserService] Fetching user by ID: " + userId);
                 return userDAO.getUserById(userId);
+        }
+
+        /**
+         * Update user information (used for password reset and profile updates)
+         */
+        public void updateUser(User user) {
+                logger.info("[UserService] Updating user: " + user.getEmail());
+
+                // Encode password if it's being changed
+                if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+                        user.setPassword(passwordEncoder.encode(user.getPassword()));
+                        logger.info("[UserService] Password updated for: " + user.getEmail());
+                }
+
+                userDAO.updateUser(user);
+                logger.info("[UserService] User updated successfully: " + user.getEmail());
         }
 }

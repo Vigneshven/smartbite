@@ -1,0 +1,118 @@
+/* ============================================
+   RESPONSIVE DESIGN - All Screen Sizes
+============================================ */
+
+/* Extra Small Phones (< 480px) */
+@media (max-width: 479px) {
+  :root {
+    --radius: 14px;
+  }
+
+  .auth-container {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-hero {
+    display: none;
+  }
+
+  .auth-form-section {
+    padding: 12px 8px;
+  }
+
+  .auth-card,
+  .otp-card {
+    max-width: 100%;
+    padding: 20px 14px;
+  }
+
+  .otp-input {
+    flex: 0 0 34px;
+    width: 34px;
+    height: 34px;
+    font-size: 1rem;
+  }
+
+  .btn {
+    min-height: 44px;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Small Phones (480px - 599px) */
+@media (min-width: 480px) and (max-width: 599px) {
+  .auth-container {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-hero {
+    display: none;
+  }
+
+  .otp-input {
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    font-size: 1.05rem;
+  }
+}
+
+/* Tablets (600px - 991px) */
+@media (min-width: 600px) and (max-width: 991px) {
+  .auth-container {
+    grid-template-columns: 1fr 1fr;
+    min-height: auto;
+  }
+
+  .auth-hero {
+    display: flex;
+    padding: 40px 32px;
+  }
+
+  .otp-input {
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+  }
+}
+
+/* Large Desktops (1200px+) */
+@media (min-width: 1200px) {
+  .auth-card,
+  .otp-card {
+    max-width: 420px;
+  }
+}
+
+/* Very Large Screens (1400px+) */
+@media (min-width: 1400px) {
+  .auth-card,
+  .otp-card {
+    max-width: 450px;
+  }
+}
+
+/* Landscape Mode */
+@media (max-height: 600px) and (orientation: landscape) {
+  .auth-form-section {
+    min-height: auto;
+    padding: 20px 24px;
+  }
+
+  .otp-hero-illustration {
+    min-height: 140px;
+  }
+}
+
+/* Touch Devices */
+@media (hover: none) and (pointer: coarse) {
+  .btn {
+    min-height: 48px;
+  }
+
+  .otp-input {
+    min-height: 44px;
+  }
+}
