@@ -23,8 +23,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
+            HttpServletResponse response,
+            FilterChain filterChain)
             throws ServletException, IOException {
 
         // ✅ IMPORTANT: allow browser preflight
@@ -44,7 +44,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
         try {
             if (!jwtUtil.validateToken(token)) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                // Invalid token should not block public endpoints.
+                // Let Spring Security handle missing authentication for protected routes.
+                filterChain.doFilter(request, response);
                 return;
             }
 
@@ -53,17 +55,17 @@ public class JwtFilter extends OncePerRequestFilter {
 
             String authority = "ROLE_" + role.replace("ROLE_", "");
 
-            UsernamePasswordAuthenticationToken auth =
-                    new UsernamePasswordAuthenticationToken(
-                            email,
-                            null,
-                            List.of(new SimpleGrantedAuthority(authority))
-                    );
+            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                    email,
+                    null,
+                    List.of(new SimpleGrantedAuthority(authority)));
 
             SecurityContextHolder.getContext().setAuthentication(auth);
 
         } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            // Do not reject requests here; allow security to deny protected endpoints
+            // later.
+            filterChain.doFilter(request, response);
             return;
         }
 

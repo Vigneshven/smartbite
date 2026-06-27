@@ -1,28 +1,139 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
-    <title>Food Ordering Login</title>
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="css/style.css" />
+    <title>SmartBite - Login to Your Account</title>
+    <meta
+      name="description"
+      content="Login to SmartBite and order delicious food from your favorite restaurants."
+    />
+    <link rel="stylesheet" href="css/auth-styles.css" />
   </head>
   <body>
-    <div class="login-container">
-      <div class="login-card">
-        <img src="images/logo.jpg" class="logo" />
+    <!-- Authentication Container -->
+    <div class="auth-container">
+      <!-- Hero Section (Left) -->
+      <div class="auth-hero">
+        <div class="auth-hero-content">
+          <div class="auth-hero-logo">🍔 SmartBite</div>
+          <h2>Welcome Back!</h2>
+          <p class="auth-hero-tagline">
+            Order delicious food from your favorite restaurants in minutes.
+          </p>
+        </div>
 
-        <h2>🍔 SmartBite</h2>
-        <p class="tagline">Eat Smart, Live Better</p>
+        <!-- Hero Benefits -->
+        <div class="auth-hero-benefits">
+          <div class="benefit-item">
+            <div class="benefit-icon">⚡</div>
+            <div class="benefit-text">
+              <strong>Fast & Easy</strong><br />Quick checkout in seconds
+            </div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-icon">🔒</div>
+            <div class="benefit-text">
+              <strong>Secure</strong><br />Your data is encrypted
+            </div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-icon">🎁</div>
+            <div class="benefit-text">
+              <strong>Rewards</strong><br />Earn points on every order
+            </div>
+          </div>
+        </div>
+      </div>
 
-        <input type="email" id="email" placeholder="Enter Email" />
+      <!-- Form Section (Right) -->
+      <div class="auth-form-section">
+        <div class="auth-card">
+          <h2>Login</h2>
+          <p class="auth-card-subtitle">
+            Enter your credentials to access your account
+          </p>
 
-        <input type="password" id="password" placeholder="Enter Password" />
+          <!-- Email Input -->
+          <div class="form-group required">
+            <label for="email">Email Address</label>
+            <div class="input-wrapper">
+              <span class="input-icon">✉️</span>
+              <input
+                type="email"
+                id="email"
+                placeholder="your@email.com"
+                autocomplete="email"
+              />
+            </div>
+          </div>
 
-        <button onclick="login()">Login</button>
+          <!-- Password Input -->
+          <div class="form-group required">
+            <label for="password">Password</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔐</span>
+              <input
+                type="password"
+                id="password"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+              />
+              <button
+                type="button"
+                class="password-toggle"
+                id="passwordToggle"
+                aria-label="Toggle password visibility"
+              >
+                👁️‍🗨️
+              </button>
+            </div>
+          </div>
 
-        <p id="message"></p>
+          <!-- Remember Me & Forgot Password -->
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin: 16px 0;
+            "
+          >
+            <label class="checkbox-group" style="margin: 0">
+              <input type="checkbox" class="checkbox-input" id="rememberMe" />
+              <span class="checkbox-label">Remember me</span>
+            </label>
+            <a
+              href="forgot-password.html"
+              class="btn btn-text"
+              style="padding: 0"
+              >Forgot Password?</a
+            >
+          </div>
+
+          <!-- Login Button -->
+          <button class="btn btn-primary" id="loginBtn" onclick="login()">
+            Login to Your Account
+          </button>
+
+          <!-- Error Message -->
+          <div id="message"></div>
+
+          <!-- Divider -->
+          <div class="divider">or continue as</div>
+
+          <!-- Sign Up Link -->
+          <div class="auth-footer">
+            Don't have an account?
+            <a href="register.html">Create Account</a>
+          </div>
+        </div>
       </div>
     </div>
+
+    <!-- Scripts -->
     <script src="js/common.js"></script>
+    <script src="js/auth-utils.js"></script>
     <script src="js/login.js"></script>
     <div id="toast" class="toast"></div>
   </body>

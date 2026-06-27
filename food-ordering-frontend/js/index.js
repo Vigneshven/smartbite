@@ -322,8 +322,6 @@ async function loadPopularRestaurants() {
 async function loadTrendingFoods() {
   try {
     const trending = await getTrendingFoods();
-    console.log("Trending foods loaded:", trending);
-    // Can be used to display trending foods on homepage
   } catch (error) {
     console.error("Error loading trending foods:", error);
   }

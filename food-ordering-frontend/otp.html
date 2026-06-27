@@ -1,30 +1,180 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
-    <title>Verify OTP</title>
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="css/style.css" />
+    <title>SmartBite - Verify Your Email</title>
+    <meta
+      name="description"
+      content="Verify your email with the OTP code sent to your inbox."
+    />
+    <link rel="stylesheet" href="css/auth-styles.css" />
+    <link rel="stylesheet" href="css/responsive-otp.css" />
   </head>
   <body>
-    <div class="login-container">
-      <div class="login-card">
-        <img src="images/logo.png" class="logo" />
+    <div class="auth-container">
+      <div class="auth-hero otp-hero">
+        <div class="auth-hero-content">
+          <div class="auth-hero-logo">🍔 SmartBite</div>
+          <div class="otp-hero-badge">Secure sign-up</div>
+          <h2>Almost there!</h2>
+          <p class="auth-hero-tagline">
+            We’ve sent a one-time verification code to keep your account secure
+            while you start craving your next meal.
+          </p>
 
-        <h2>Verify OTP</h2>
-        <p class="tagline">Enter the OTP sent to your email</p>
+          <div class="otp-hero-panel">
+            <div class="otp-hero-row">
+              <span class="otp-hero-icon">📬</span>
+              <div>
+                <strong>Check your inbox</strong>
+                <p>Use the code within the next minute to finish setup.</p>
+              </div>
+            </div>
+            <div class="otp-hero-row">
+              <span class="otp-hero-icon">⚡</span>
+              <div>
+                <strong>Fast and secure</strong>
+                <p>Verify once and jump straight into your favorites.</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        <input type="email" id="otpEmail" placeholder="Email" />
-        <input type="text" id="otpValue" placeholder="Enter OTP" />
+        <div class="otp-hero-illustration" aria-hidden="true">
+          <div class="otp-hero-card">
+            <div class="otp-hero-card-top">Verification</div>
+            <div class="otp-hero-dots">● ● ● ● ● ●</div>
+            <div class="otp-hero-card-bottom">Code ready</div>
+          </div>
+        </div>
+      </div>
 
-        <button onclick="verifyOtp()">Verify</button>
-        <button type="button" class="secondary-button" onclick="resendOtp()">
-          Resend OTP
-        </button>
-        <p id="otpMessage"></p>
+      <div class="auth-form-section">
+        <div class="auth-card otp-card">
+          <div class="otp-card-header">
+            <span class="otp-step-pill">Step 2 of 2</span>
+            <h2>Verify your email</h2>
+            <p class="auth-card-subtitle">
+              Enter the 6-digit code we sent to your inbox to finish setting up
+              your account.
+            </p>
+          </div>
+
+          <div class="otp-email-card">
+            <div class="otp-email-label">Code sent to</div>
+            <div class="otp-email-value" id="emailDisplay"></div>
+            <button
+              type="button"
+              class="btn btn-text otp-change-link"
+              onclick="changeEmail()"
+            >
+              Change email
+            </button>
+          </div>
+
+          <div class="otp-helper">Enter the code below</div>
+
+          <div class="otp-container">
+            <input
+              type="number"
+              id="otp1"
+              class="otp-input"
+              placeholder="0"
+              maxlength="1"
+              inputmode="numeric"
+              min="0"
+              max="9"
+              autocomplete="one-time-code"
+            />
+            <input
+              type="number"
+              id="otp2"
+              class="otp-input"
+              placeholder="0"
+              maxlength="1"
+              inputmode="numeric"
+              min="0"
+              max="9"
+            />
+            <input
+              type="number"
+              id="otp3"
+              class="otp-input"
+              placeholder="0"
+              maxlength="1"
+              inputmode="numeric"
+              min="0"
+              max="9"
+            />
+            <input
+              type="number"
+              id="otp4"
+              class="otp-input"
+              placeholder="0"
+              maxlength="1"
+              inputmode="numeric"
+              min="0"
+              max="9"
+            />
+            <input
+              type="number"
+              id="otp5"
+              class="otp-input"
+              placeholder="0"
+              maxlength="1"
+              inputmode="numeric"
+              min="0"
+              max="9"
+            />
+            <input
+              type="number"
+              id="otp6"
+              class="otp-input"
+              placeholder="0"
+              maxlength="1"
+              inputmode="numeric"
+              min="0"
+              max="9"
+            />
+          </div>
+
+          <div class="otp-actions">
+            <div class="countdown">
+              Expires in <span id="countdownTimer">01:00</span>
+            </div>
+            <button
+              class="btn btn-primary"
+              id="verifyBtn"
+              onclick="verifyOtp()"
+            >
+              Verify Email
+            </button>
+            <div id="otpMessage"></div>
+          </div>
+
+          <div class="otp-footer">
+            <p>Didn't receive the code?</p>
+            <div class="otp-footer-actions">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                id="resendBtn"
+                onclick="resendOtp()"
+              >
+                Resend OTP
+              </button>
+              <a href="login.html" class="otp-link">Back to login</a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
+    <!-- Scripts -->
     <script src="js/common.js"></script>
+    <script src="js/auth-utils.js"></script>
     <script src="js/otp.js"></script>
+    <div id="toast" class="toast"></div>
   </body>
 </html>

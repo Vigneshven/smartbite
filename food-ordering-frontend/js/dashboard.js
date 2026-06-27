@@ -81,19 +81,23 @@ async function loadFavorites() {
     return;
   }
 
-  const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
 
   try {
     const response = await fetch(`${API_BASE_URL}/api/favorites/${userId}`, {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
+      headers: getAuthHeaders(),
     });
+
+    if (handleUnauthorized(response)) {
+      favorites = [];
+      return;
+    }
+
     if (!response.ok) {
       favorites = [];
       return;
     }
+
     favorites = await response.json();
   } catch (error) {
     console.error("Error loading favorites:", error);
@@ -102,20 +106,28 @@ async function loadFavorites() {
 }
 
 async function loadTrendingFoods() {
-  const token = localStorage.getItem("token");
-  const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
   try {
     const response = await fetch(`${API_BASE_URL}/api/trending`, {
-      headers,
+      headers: getAuthHeaders(),
     });
+
+    if (handleUnauthorized(response)) {
+      return;
+    }
+
+    if (!response.ok) {
+      throw new Error(`Trending fetch failed: ${response.status}`);
+    }
 
     allTrendingFoods = await response.json();
     renderFoodCards(allTrendingFoods, "trendingFoods", "🔥 Trending");
   } catch (error) {
     console.error("Error loading trending foods:", error);
-    document.getElementById("trendingFoods").innerHTML =
-      '<p style="text-align: center; color: var(--text-muted);">Unable to load trending foods</p>';
+    const trendingFoodsContainer = document.getElementById("trendingFoods");
+    if (trendingFoodsContainer) {
+      trendingFoodsContainer.innerHTML =
+        '<p style="text-align: center; color: var(--text-muted);">Unable to load trending foods</p>';
+    }
   }
 }
 
@@ -129,18 +141,19 @@ async function loadRecommendations() {
     return;
   }
 
-  const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
 
   try {
     const response = await fetch(
       `${API_BASE_URL}/api/recommendations/${userId}`,
       {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
+        headers: getAuthHeaders(),
       },
     );
+
+    if (handleUnauthorized(response)) {
+      return;
+    }
 
     if (!response.ok) {
       renderFoodCards(
@@ -173,18 +186,19 @@ async function loadWishlistRecommendations() {
     return;
   }
 
-  const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
 
   try {
     const response = await fetch(
       `${API_BASE_URL}/api/wishlist/recommendations/${userId}`,
       {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
+        headers: getAuthHeaders(),
       },
     );
+
+    if (handleUnauthorized(response)) {
+      return;
+    }
 
     if (response.ok) {
       const foods = await response.json();
@@ -216,15 +230,16 @@ async function loadOrderAgain() {
     return;
   }
 
-  const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
 
   try {
     const response = await fetch(`${API_BASE_URL}/api/reorder/${userId}`, {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
+      headers: getAuthHeaders(),
     });
+
+    if (handleUnauthorized(response)) {
+      return;
+    }
 
     if (response.ok) {
       const foods = await response.json();
@@ -247,16 +262,22 @@ async function loadOrderAgain() {
 }
 
 async function loadCategoryBased() {
-  const token = localStorage.getItem("token");
-  const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
   try {
     const response = await fetch(
       `${API_BASE_URL}/api/foods/category/South%20Indian`,
       {
-        headers,
+        headers: getAuthHeaders(),
       },
     );
+
+    if (handleUnauthorized(response)) {
+      renderFoodCards(
+        allTrendingFoods.slice(0, 6),
+        "categoryBased",
+        "🍕 Popular",
+      );
+      return;
+    }
 
     if (response.ok) {
       const foods = await response.json();
@@ -284,18 +305,20 @@ async function loadWeeklySpending() {
     return;
   }
 
-  const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
 
   try {
     const response = await fetch(
       `${API_BASE_URL}/api/orders/weekly-spending/${userId}`,
       {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
+        headers: getAuthHeaders(),
       },
     );
+
+    if (handleUnauthorized(response)) {
+      renderWeeklySpending({ totalSpent: 0, orderCount: 0, avgOrder: 0 });
+      return;
+    }
 
     if (response.ok) {
       const data = await response.json();
@@ -315,18 +338,20 @@ async function loadTopRestaurant() {
     return;
   }
 
-  const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
 
   try {
     const response = await fetch(
       `${API_BASE_URL}/api/orders/top-restaurant/${userId}`,
       {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
+        headers: getAuthHeaders(),
       },
     );
+
+    if (handleUnauthorized(response)) {
+      renderTopRestaurant(null);
+      return;
+    }
 
     if (response.ok) {
       const text = await response.text();
@@ -410,17 +435,21 @@ async function toggleFavorite(foodId) {
   }
 
   try {
-    await fetch(`${API_BASE_URL}/api/favorites/toggle`, {
+    const response = await fetch(`${API_BASE_URL}/api/favorites/toggle`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
+        ...getAuthHeaders(),
       },
       body: JSON.stringify({
         userId: Number(userId),
         foodId: Number(foodId),
       }),
     });
+
+    if (handleUnauthorized(response)) {
+      return;
+    }
 
     showToast("❤️ Wishlist Updated");
 
@@ -441,7 +470,6 @@ function viewFood(foodId) {
 }
 
 async function loadNavbarData() {
-  const token = localStorage.getItem("token");
   const userId = localStorage.getItem("userId");
   const username = localStorage.getItem("username");
 
@@ -452,7 +480,7 @@ async function loadNavbarData() {
   const cartBadge = document.getElementById("cartCount");
   const wishlistBadge = document.getElementById("wishlistCount");
 
-  if (!token || !userId) {
+  if (!userId) {
     if (cartBadge) cartBadge.innerText = "0";
     if (wishlistBadge) wishlistBadge.innerText = "0";
     return;
@@ -461,12 +489,21 @@ async function loadNavbarData() {
   try {
     const [cartResponse, favoriteResponse] = await Promise.all([
       fetch(`${API_BASE_URL}/api/cart/user/${userId}`, {
-        headers: { Authorization: "Bearer " + token },
+        headers: getAuthHeaders(),
       }),
       fetch(`${API_BASE_URL}/api/favorites/${userId}`, {
-        headers: { Authorization: "Bearer " + token },
+        headers: getAuthHeaders(),
       }),
     ]);
+
+    if (
+      handleUnauthorized(cartResponse) ||
+      handleUnauthorized(favoriteResponse)
+    ) {
+      if (cartBadge) cartBadge.innerText = "0";
+      if (wishlistBadge) wishlistBadge.innerText = "0";
+      return;
+    }
 
     if (cartResponse.ok) {
       const cartItems = await cartResponse.json();
@@ -491,6 +528,17 @@ async function loadNavbarData() {
     if (cartBadge) cartBadge.innerText = "0";
     if (wishlistBadge) wishlistBadge.innerText = "0";
   }
+}
+
+function handleUnauthorized(response) {
+  if (!response) {
+    return false;
+  }
+  if (response.status === 401 || response.status === 403) {
+    logout();
+    return true;
+  }
+  return false;
 }
 
 function applyDashboardSearch() {
