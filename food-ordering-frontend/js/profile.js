@@ -1,3 +1,9 @@
+const token = localStorage.getItem("token");
+
+if (!token) {
+  window.location.href = "login.html";
+}
+
 // Check if user is logged in when page loads
 function checkProfileAccess() {
   const token = localStorage.getItem("token");

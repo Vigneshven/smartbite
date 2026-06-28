@@ -15,3 +15,19 @@ window.onclick = function (e) {
     if (navbar) navbar.classList.remove("nav-open");
   }
 };
+
+const profileBtn = document.getElementById("profileNavBtn");
+
+if (profileBtn) {
+  profileBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      window.location.href = "profile.html";
+    } else {
+      window.location.href = "login.html";
+    }
+  });
+}
