@@ -1,4 +1,6 @@
 let allRestaurants = [];
+let currentSearch = "";
+let currentSort = "";
 
 async function loadRestaurants() {
   const token = localStorage.getItem("token");
@@ -18,25 +20,54 @@ async function loadRestaurants() {
 
   const searchQuery = localStorage.getItem("searchQuery");
   if (searchQuery) {
-    const filtered = filterRestaurants(allRestaurants, searchQuery);
-    renderRestaurants(filtered);
+    currentSearch = searchQuery;
+    applyFilters();
     localStorage.removeItem("searchQuery");
     const searchInput = document.getElementById("globalSearch");
     if (searchInput) {
       searchInput.value = searchQuery;
     }
   } else {
-    renderRestaurants(allRestaurants);
+    applyFilters();
   }
 }
 
-function filterRestaurants(restaurants, keyword) {
-  const normalized = keyword.toLowerCase().trim();
-  return restaurants.filter(
-    (r) =>
-      r.restaurantName.toLowerCase().includes(normalized) ||
-      r.cuisine.toLowerCase().includes(normalized),
-  );
+function applyFilters() {
+  let restaurants = [...allRestaurants];
+
+  // Search
+
+  if (currentSearch.trim() !== "") {
+    restaurants = restaurants.filter(
+      (r) =>
+        r.restaurantName.toLowerCase().includes(currentSearch.toLowerCase()) ||
+        r.cuisine.toLowerCase().includes(currentSearch.toLowerCase()),
+    );
+  }
+
+  // Sorting
+
+  if (currentSort === "ratingHigh") {
+    restaurants.sort((a, b) => b.rating - a.rating);
+  }
+
+  if (currentSort === "ratingLow") {
+    restaurants.sort((a, b) => a.rating - b.rating);
+  }
+
+  if (currentSort === "nameAZ") {
+    restaurants.sort((a, b) =>
+      a.restaurantName.localeCompare(b.restaurantName),
+    );
+  }
+
+  if (currentSort === "nameZA") {
+    restaurants.sort((a, b) =>
+      b.restaurantName.localeCompare(a.restaurantName),
+    );
+  }
+
+  renderRestaurants(restaurants);
 }
 
 function renderRestaurants(restaurants) {
@@ -128,22 +159,24 @@ async function loadNavbarData() {
 }
 
 function attachRestaurantSearchListener() {
-  const searchInput = document.getElementById("globalSearch");
+  const searchBox =
+    document.getElementById("restaurantSearch") ||
+    document.getElementById("globalSearch");
 
-  if (!searchInput) return;
+  if (!searchBox) return;
 
-  searchInput.addEventListener("input", function () {
-    const keyword = this.value.toLowerCase().trim();
-
-    const filtered = allRestaurants.filter(
-      (r) =>
-        r.restaurantName.toLowerCase().includes(keyword) ||
-        r.cuisine.toLowerCase().includes(keyword),
-    );
-
-    renderRestaurants(filtered);
+  searchBox.addEventListener("input", function () {
+    currentSearch = this.value.trim().toLowerCase();
+    applyFilters();
   });
 }
+
+document
+  .getElementById("sortRestaurant")
+  ?.addEventListener("change", function () {
+    currentSort = this.value;
+    applyFilters();
+  });
 
 document.addEventListener("DOMContentLoaded", () => {
   onNavbarRendered(attachRestaurantSearchListener);
