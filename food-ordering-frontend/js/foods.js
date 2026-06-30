@@ -3,6 +3,11 @@ let allFoods = [];
 let currentSort = "";
 let currentSearch = "";
 
+document.getElementById("sortFood")?.addEventListener("change", function () {
+  currentSort = this.value;
+  applyFilters();
+});
+
 async function loadFavorites() {
   const userId = localStorage.getItem("userId");
   const token = localStorage.getItem("token");
@@ -154,21 +159,37 @@ function applyFilters() {
   let foods = [...allFoods];
 
   // Search
-
   if (currentSearch.trim() !== "") {
-    foods = foods.filter((food) =>
-      food.foodName.toLowerCase().includes(currentSearch.toLowerCase()),
+    const keyword = currentSearch.toLowerCase();
+
+    foods = foods.filter(
+      (food) =>
+        food.foodName.toLowerCase().includes(keyword) ||
+        food.description.toLowerCase().includes(keyword) ||
+        food.category.toLowerCase().includes(keyword),
     );
   }
 
-  // Sort
+  // Sorting
+  switch (currentSort) {
+    case "low":
+      foods.sort((a, b) => a.price - b.price);
+      break;
 
-  if (currentSort === "low") {
-    foods.sort((a, b) => a.price - b.price);
-  }
+    case "high":
+      foods.sort((a, b) => b.price - a.price);
+      break;
 
-  if (currentSort === "high") {
-    foods.sort((a, b) => b.price - a.price);
+    case "nameAZ":
+      foods.sort((a, b) => a.foodName.localeCompare(b.foodName));
+      break;
+
+    case "nameZA":
+      foods.sort((a, b) => b.foodName.localeCompare(a.foodName));
+      break;
+
+    default:
+      break;
   }
 
   renderFoods(foods);
