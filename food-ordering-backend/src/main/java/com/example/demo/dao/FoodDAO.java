@@ -6,6 +6,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 @Repository
 public class FoodDAO {
@@ -249,4 +254,41 @@ public class FoodDAO {
                                 });
         }
 
+        public int createFood(Food food) {
+
+                String sql = "INSERT INTO FOODS (RESTAURANT_ID, FOOD_NAME, CATEGORY, PRICE, DESCRIPTION, CALORIES, STOCK, IMAGE_URL, INGREDIENTS) VALUES (?,?,?,?,?,?,?,?,?)";
+
+                KeyHolder keyHolder = new GeneratedKeyHolder();
+
+                jdbcTemplate.update((Connection conn) -> {
+                        PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                        ps.setInt(1, food.getRestaurantId());
+                        ps.setString(2, food.getFoodName());
+                        ps.setString(3, food.getCategory());
+                        ps.setDouble(4, food.getPrice());
+                        ps.setString(5, food.getDescription());
+                        ps.setInt(6, food.getCalories());
+                        ps.setInt(7, food.getStock());
+                        ps.setString(8, food.getImageUrl());
+                        ps.setString(9, food.getIngredients());
+                        return ps;
+                }, keyHolder);
+
+                Number key = keyHolder.getKey();
+                return key != null ? key.intValue() : -1;
+        }
+
+        public boolean updateFood(int foodId, Food food) {
+                String sql = "UPDATE FOODS SET FOOD_NAME=?, CATEGORY=?, PRICE=?, DESCRIPTION=?, CALORIES=?, STOCK=?, IMAGE_URL=?, INGREDIENTS=? WHERE FOOD_ID=?";
+                int updated = jdbcTemplate.update(sql, food.getFoodName(), food.getCategory(), food.getPrice(),
+                                food.getDescription(), food.getCalories(), food.getStock(), food.getImageUrl(),
+                                food.getIngredients(), foodId);
+                return updated > 0;
+        }
+
+        public boolean deleteFood(int foodId) {
+                String sql = "DELETE FROM FOODS WHERE FOOD_ID = ?";
+                int deleted = jdbcTemplate.update(sql, foodId);
+                return deleted > 0;
+        }
 }

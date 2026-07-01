@@ -2,8 +2,8 @@
    RESPONSIVE DESIGN - All Screen Sizes
 ============================================ */
 
-/* Extra Small Phones (< 480px) */
-@media (max-width: 479px) {
+/* Mobile (up to 480px) */
+@media (max-width: 480px) {
   :root {
     --radius: 14px;
   }
@@ -40,8 +40,8 @@
   }
 }
 
-/* Small Phones (480px - 599px) */
-@media (min-width: 480px) and (max-width: 599px) {
+/* Small Tablet (481px - 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
   .auth-container {
     grid-template-columns: 1fr;
   }
@@ -58,8 +58,8 @@
   }
 }
 
-/* Tablets (600px - 991px) */
-@media (min-width: 600px) and (max-width: 991px) {
+/* Large Tablet (769px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
   .auth-container {
     grid-template-columns: 1fr 1fr;
     min-height: auto;
@@ -78,8 +78,8 @@
   }
 }
 
-/* Large Desktops (1200px+) */
-@media (min-width: 1200px) {
+/* Small Desktop (1025px - 1200px) */
+@media (min-width: 1025px) and (max-width: 1200px) {
   .auth-card,
   .otp-card {
     max-width: 420px;

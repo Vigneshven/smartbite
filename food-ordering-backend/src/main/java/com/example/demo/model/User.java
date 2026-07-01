@@ -9,16 +9,28 @@ public class User {
     private String phone;
 
     private String role;
+    private boolean blocked;
 
     public String getRole() {
-    return role;
+        return role;
     }
 
     public void setRole(String role) {
-    this.role = role;
+        this.role = role;
     }
 
-    public User() {}
+    private String role;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public User() {
+    }
 
     public int getUserId() {
         return userId;
@@ -57,6 +69,5 @@ public class User {
     }
 
     public void setPhone(String phone) {
-        this.phone = phone;
-    }
-}
+            this.phone = phone;
+        }

@@ -50,9 +50,24 @@ public class FoodService {
 
     }
 
-
     public List<Food> getFoodsByCategory(String category) {
         return foodDAO.getFoodsByCategory(category);
+    }
+
+    public Food createFood(Food food) {
+        int id = foodDAO.createFood(food);
+        if (id > 0) {
+            return foodDAO.getFoodById(id);
+        }
+        return null;
+    }
+
+    public boolean updateFood(int foodId, Food food) {
+        return foodDAO.updateFood(foodId, food);
+    }
+
+    public boolean deleteFood(int foodId) {
+        return foodDAO.deleteFood(foodId);
     }
 
 }

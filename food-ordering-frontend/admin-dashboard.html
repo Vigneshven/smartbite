@@ -7,56 +7,229 @@
   </head>
 
   <body>
-    <div class="admin-navbar">
-      <div class="admin-brand">🍔 SmartBite Admin</div>
-      <div class="admin-actions">
-        <button onclick="logoutAdmin()">Logout</button>
-      </div>
+    <div class="admin-layout">
+      <aside class="admin-sidebar">
+        <div class="admin-brand">🍔 SmartBite Admin</div>
+        <nav class="admin-nav">
+          <button
+            onclick="location.href = 'admin-dashboard.html'"
+            class="active"
+          >
+            Dashboard
+          </button>
+          <button onclick="location.href = 'restaurants.html'">
+            Restaurants
+          </button>
+          <button onclick="location.href = 'foods.html'">Menu / Foods</button>
+          <button onclick="location.href = 'categories.html'">
+            Categories
+          </button>
+          <button onclick="location.href = 'orders.html'">Orders</button>
+          <button onclick="location.href = 'users.html'">Users</button>
+          <button onclick="location.href = 'reviews.html'">Reviews</button>
+        </nav>
+        <div class="admin-sidebar-footer">
+          <button onclick="logoutAdmin()">Logout</button>
+        </div>
+      </aside>
+
+      <main class="admin-main">
+        <header class="admin-topbar">
+          <h1>Admin Dashboard</h1>
+          <div class="admin-top-actions">
+            <input type="search" id="adminSearch" placeholder="Search..." />
+          </div>
+        </header>
+
+        <section class="admin-cards-grid">
+          <article class="stat-card">
+            <span class="stat-label">Total Users</span>
+            <strong id="totalUsers">0</strong>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">Total Foods</span>
+            <strong id="totalFoods">0</strong>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">Restaurants</span>
+            <strong id="totalRestaurants">0</strong>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">Orders</span>
+            <strong id="totalOrders">0</strong>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">Revenue</span>
+            <strong id="totalRevenue">₹0</strong>
+          </article>
+        </section>
+
+        <section class="admin-section">
+          <h2>Top Selling Foods</h2>
+          <div id="topSellingFoods" class="top-selling-list"></div>
+        </section>
+
+        <section class="admin-section">
+          <h2>Revenue Trend</h2>
+          <div id="revenueTrend" class="chart-card">Chart coming soon</div>
+        </section>
+
+        <section class="admin-section">
+          <h2>Restaurants</h2>
+
+          <div class="admin-table-controls">
+            <input
+              type="search"
+              id="adminRestaurantSearch"
+              placeholder="Search restaurants..."
+            />
+            <select id="adminRestaurantPageSize">
+              <option value="5">5 / page</option>
+              <option value="8" selected>8 / page</option>
+              <option value="12">12 / page</option>
+            </select>
+            <select id="adminRestaurantSort">
+              <option value="">Sort</option>
+              <option value="nameAZ">Name A→Z</option>
+              <option value="nameZA">Name Z→A</option>
+              <option value="ratingHigh">Rating High→Low</option>
+              <option value="ratingLow">Rating Low→High</option>
+            </select>
+          </div>
+
+          <div id="adminRestaurantsTable" class="admin-table"></div>
+          <div id="adminRestaurantPagination" class="admin-pagination"></div>
+        </section>
+
+        <!-- Restaurant Add/Edit Modal -->
+        <div id="restaurantModal" class="modal hidden">
+          <div class="modal-backdrop" onclick="closeRestaurantModal()"></div>
+          <div class="modal-content">
+            <h3 id="restaurantModalTitle">Add Restaurant</h3>
+            <form id="restaurantForm">
+              <input type="hidden" id="restaurantIdInput" />
+              <label>Name</label>
+              <input id="restaurantNameInput" required />
+              <label>Cuisine</label>
+              <input id="restaurantCuisineInput" />
+              <label>Address</label>
+              <input id="restaurantAddressInput" />
+              <label>Phone</label>
+              <input id="restaurantPhoneInput" />
+              <label>Status</label>
+              <select id="restaurantStatusInput">
+                <option value="OPEN">Open</option>
+                <option value="CLOSED">Closed</option>
+              </select>
+              <label>Image</label>
+              <input type="file" id="restaurantImageInput" accept="image/*" />
+              <div id="restaurantImagePreview" style="margin: 8px 0"></div>
+
+              <div
+                style="
+                  display: flex;
+                  gap: 8px;
+                  justify-content: flex-end;
+                  margin-top: 12px;
+                "
+              >
+                <button type="button" onclick="closeRestaurantModal()">
+                  Cancel
+                </button>
+                <button type="submit" class="btn-primary">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <section class="admin-section">
+          <h2>Foods</h2>
+          <div class="admin-table-controls">
+            <button onclick="openAddFoodModal()" class="btn-primary">
+              + Add Food
+            </button>
+            <input
+              type="search"
+              id="adminFoodSearch"
+              placeholder="Search foods..."
+            />
+            <select id="adminFoodPageSize">
+              <option value="5">5 / page</option>
+              <option value="8" selected>8 / page</option>
+              <option value="12">12 / page</option>
+            </select>
+            <select id="adminFoodSort">
+              <option value="">Sort</option>
+              <option value="nameAZ">Name A→Z</option>
+              <option value="nameZA">Name Z→A</option>
+            </select>
+          </div>
+          <div id="adminFoodsTable" class="admin-table"></div>
+          <div id="adminFoodPagination" class="admin-pagination"></div>
+        </section>
+
+        <!-- Food Add/Edit Modal -->
+        <div id="foodModal" class="modal hidden">
+          <div class="modal-backdrop" onclick="closeFoodModal()"></div>
+          <div class="modal-content">
+            <h3 id="foodModalTitle">Add Food</h3>
+            <form id="foodForm">
+              <input type="hidden" id="foodIdInput" />
+              <label>Name</label>
+              <input id="foodNameInput" required />
+              <label>Category</label>
+              <input id="foodCategoryInput" />
+              <label>Price</label>
+              <input id="foodPriceInput" type="number" step="0.01" />
+              <label>Veg / Non-Veg</label>
+              <select id="foodVegInput">
+                <option value="VEG">Veg</option>
+                <option value="NON_VEG">Non-Veg</option>
+              </select>
+              <label>Available</label>
+              <select id="foodAvailableInput">
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+              <label>Description</label>
+              <textarea id="foodDescriptionInput" rows="3"></textarea>
+              <label>Image</label>
+              <input type="file" id="foodImageInput" accept="image/*" />
+              <div id="foodImagePreview" style="margin: 8px 0"></div>
+
+              <div
+                style="
+                  display: flex;
+                  gap: 8px;
+                  justify-content: flex-end;
+                  margin-top: 12px;
+                "
+              >
+                <button type="button" onclick="closeFoodModal()">Cancel</button>
+                <button type="submit" class="btn-primary">Save Food</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <section class="admin-section">
+          <h2>Users</h2>
+          <p style="color: var(--text-muted)">
+            User management endpoints are not exposed by the backend. You can
+            add an endpoint at <code>/api/admin/users</code> to enable listing,
+            blocking, and editing users. Use the button below to attempt
+            fetching users if your backend provides it.
+          </p>
+          <div style="display: flex; gap: 8px; align-items: center">
+            <button id="tryFetchUsersBtn">Fetch Users</button>
+            <div id="adminUsersContainer"></div>
+          </div>
+        </section>
+      </main>
     </div>
 
-    <main class="admin-main">
-      <section class="admin-hero">
-        <h1>Admin Dashboard</h1>
-        <p>
-          Monitor users, foods, restaurants, orders, revenue, and top sellers.
-        </p>
-      </section>
-
-      <section class="admin-cards-grid">
-        <article class="stat-card">
-          <span class="stat-label">Total Users</span>
-          <strong id="totalUsers">0</strong>
-        </article>
-        <article class="stat-card">
-          <span class="stat-label">Total Foods</span>
-          <strong id="totalFoods">0</strong>
-        </article>
-        <article class="stat-card">
-          <span class="stat-label">Restaurants</span>
-          <strong id="totalRestaurants">0</strong>
-        </article>
-        <article class="stat-card">
-          <span class="stat-label">Orders</span>
-          <strong id="totalOrders">0</strong>
-        </article>
-        <article class="stat-card">
-          <span class="stat-label">Revenue</span>
-          <strong id="totalRevenue">₹0</strong>
-        </article>
-      </section>
-
-      <section class="admin-section">
-        <h2>Top Selling Foods</h2>
-        <div id="topSellingFoods" class="top-selling-list"></div>
-      </section>
-
-      <section class="admin-section">
-        <h2>Revenue Trend</h2>
-        <div id="revenueTrend" class="chart-card">Chart coming soon</div>
-      </section>
-    </main>
-
     <script src="js/common.js"></script>
+    <script src="js/admin-ui.js"></script>
     <script src="js/admin-dashboard.js"></script>
   </body>
 </html>

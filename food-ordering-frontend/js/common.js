@@ -53,6 +53,8 @@ function renderNavbar() {
     : "🌙 Dark";
 
   if (isLoggedIn()) {
+    const role = (localStorage.getItem("role") || "").toUpperCase();
+
     rightContent = `
       ${ctaButton}
       <button id="darkModeToggle" class="profile-btn btn-secondary" onclick="toggleDarkMode()">${darkLabel}</button>
@@ -67,6 +69,7 @@ function renderNavbar() {
             <p id="profilePhone"></p>
           </div>
           <button onclick="location.href='profile.html'">👤 My Profile</button>
+          ${role === "ADMIN" ? '<button id="adminDashboardBtn" onclick="location.href=\'admin-dashboard.html\'">🛠 Admin Dashboard</button>' : ""}
           <button onclick="location.href='dashboard.html'">🏠 Dashboard</button>
           <button onclick="location.href='restaurants.html'">🍽 Restaurants</button>
           <button onclick="location.href='foods.html'">🍔 Menu</button>
@@ -302,6 +305,38 @@ async function updateNavbarState() {
     if (wishlistCount) wishlistCount.innerText = "0";
     if (cartCount) cartCount.innerText = "0";
     updateCartBadge(0);
+  }
+
+  // Ensure admin link appears in static profile-dropdowns for pages that have hard-coded HTML
+  try {
+    const role = (localStorage.getItem("role") || "").toUpperCase();
+    const dropdown = document.getElementById("profileDropdown");
+    if (dropdown) {
+      const existing = document.getElementById("adminDashboardBtn");
+      if (role === "ADMIN") {
+        if (!existing) {
+          const btn = document.createElement("button");
+          btn.id = "adminDashboardBtn";
+          btn.innerText = "🛠 Admin Dashboard";
+          btn.onclick = () => (window.location.href = "admin-dashboard.html");
+
+          // Insert before Dashboard button if present
+          const dashboardBtn = Array.from(
+            dropdown.querySelectorAll("button"),
+          ).find(
+            (b) =>
+              b.getAttribute("onclick") &&
+              b.getAttribute("onclick").includes("dashboard.html"),
+          );
+          if (dashboardBtn) dropdown.insertBefore(btn, dashboardBtn);
+          else dropdown.appendChild(btn);
+        }
+      } else if (existing) {
+        existing.remove();
+      }
+    }
+  } catch (e) {
+    // ignore
   }
 }
 

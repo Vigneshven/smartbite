@@ -99,4 +99,5 @@ public class UserService {
                 userDAO.updateUser(user);
                 logger.info("[UserService] User updated successfully: " + user.getEmail());
         }
+
 }
