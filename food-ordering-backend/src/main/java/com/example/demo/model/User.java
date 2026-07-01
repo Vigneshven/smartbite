@@ -7,16 +7,14 @@ public class User {
     private String email;
     private String password;
     private String phone;
-
-    private String role;
     private boolean blocked;
 
-    public String getRole() {
-        return role;
+    public boolean isBlocked() {
+        return blocked;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setBlocked(boolean blocked) {
+        this.blocked = blocked;
     }
 
     private String role;
@@ -69,5 +67,7 @@ public class User {
     }
 
     public void setPhone(String phone) {
-            this.phone = phone;
-        }
+        this.phone = phone;
+    }
+
+}
